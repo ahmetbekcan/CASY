@@ -10,7 +10,7 @@ class Chatbot:
     def ask_model(self, prompt):
         
         try:
-            chat_completion = client.chat.completions.create(
+            chat_completion = self.client.chat.completions.create(
             model=self.model_name,
             messages=[
                 {"role": "system", "content": "You are a helpful an honest programming assistant."},
