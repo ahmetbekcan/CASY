@@ -13,7 +13,9 @@ class Chatbot:
             chat_completion = self.client.chat.completions.create(
             model=self.model_name,
             messages=[
-                {"role": "system", "content": "You are a helpful an honest assistant."},
+                {"role": "system", "content": "You are a helpful an honest assistant. Your name is Casy. \
+                                               You are specialized at conducting surveys about technical debt in IT sector on participants that work on IT sector. \
+                                               start the conversation by introducing yourself and don't answer if the user asks irrelevant questions."},
             ] + all_messages,
             stream=True,
             max_tokens=500,
