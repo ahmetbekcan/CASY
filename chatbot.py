@@ -22,7 +22,7 @@ class Chatbot:
             #response = self.client.text_generation(model=self.model_name, prompt=final_prompt)
             #return response
             #return chat_completion.choices[0].message.content
-            return chat_completion
+            return chat_completion.choices[0]
         except Exception as e:
             print("Error:", e)
             return None
