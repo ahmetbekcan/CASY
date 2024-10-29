@@ -1,4 +1,5 @@
 from huggingface_hub import InferenceClient
+import os
 
 class Chatbot:
     def __init__(self):
