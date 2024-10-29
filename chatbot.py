@@ -13,7 +13,7 @@ class Chatbot:
             chat_completion = self.client.chat.completions.create(
             model=self.model_name,
             messages=[
-                {"role": "system", "content": "You are a helpful an honest programming assistant."},
+                {"role": "system", "content": "You are a helpful an honest assistant."},
                 {"role": "user", "content": prompt},
             ],
             max_tokens=500,
