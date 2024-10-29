@@ -20,7 +20,7 @@ class Chatbot:
             max_tokens=500,
             )
             for message in chat_completion:
-                yield message.choices[0].delta.get('content', '')
+                yield message.choices[0].delta.content
         except Exception as e:
             print("Error:", e)
             return None
