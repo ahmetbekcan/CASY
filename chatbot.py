@@ -3,7 +3,7 @@ from huggingface_hub import InferenceClient
 class Chatbot:
     def __init__(self):
         # Define your model name
-        self.model_name = "meta-llama/Llama-3-8B-Instruct"
+        self.model_name = os.getenv('MODEL_NAME')
         self.client = InferenceClient()
 
     def ask_model(self, prompt):
