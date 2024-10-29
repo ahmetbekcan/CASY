@@ -22,7 +22,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 if st.session_state.initial_message is not None:
-    st.session_state.messages.append({"role": "assistant", "content": initial_message })
+    st.session_state.messages.append({"role": "assistant", "content": st.session_state.initial_message })
     st.session_state.initial_message = None
 
 
