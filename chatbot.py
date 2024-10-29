@@ -16,7 +16,6 @@ class Chatbot:
                 {"role": "system", "content": "You are a helpful an honest programming assistant."},
                 {"role": "user", "content": prompt},
             ],
-            stream=True,
             max_tokens=500,
             )
             #response = self.client.text_generation(model=self.model_name, prompt=final_prompt)
