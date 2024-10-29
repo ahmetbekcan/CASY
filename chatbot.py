@@ -9,7 +9,9 @@ class Chatbot:
 
     def ask_model(self, prompt):
         try:
-            response = self.client.text_generation(model=self.model_name, prompt=prompt)
+            initial_prompt = "You are a helpful assistant. Your main goal is to answer the questions given by the user or respond to their sentences like a normal person." 
+            final_prompt = initial_prompt + prompt
+            response = self.client.text_generation(model=self.model_name, prompt=final_prompt)
             return response
         except Exception as e:
             print("Error:", e)
