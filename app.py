@@ -13,8 +13,9 @@ st.title("CASY")
 # Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
-    initial_message = st.write_stream(chatbot.ask_model([{"role": "user", "content": "Hi!"}]))
-    st.session_state.messages.append({"role": "assistant", "content": initial_message })
+    with st.chat_message("assistant"):
+        initial_message = st.write_stream(chatbot.ask_model([{"role": "user", "content": "Hi!"}]))
+        st.session_state.messages.append({"role": "assistant", "content": initial_message })
 
 # Display chat messages from history on app rerun
 for message in st.session_state.messages:
