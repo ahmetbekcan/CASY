@@ -7,15 +7,14 @@ class Chatbot:
         self.model_name = os.getenv('MODEL_NAME')
         self.client = InferenceClient()
 
-    def ask_model(self, prompt):
+    def ask_model(self, all_messages):
         
         try:
             chat_completion = self.client.chat.completions.create(
             model=self.model_name,
             messages=[
                 {"role": "system", "content": "You are a helpful an honest assistant."},
-                {"role": "user", "content": prompt},
-            ],
+            ] + all_messages,
             stream=True,
             max_tokens=500,
             )
