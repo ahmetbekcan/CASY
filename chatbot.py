@@ -19,10 +19,8 @@ class Chatbot:
             stream=True,
             max_tokens=500,
             )
-            #response = self.client.text_generation(model=self.model_name, prompt=final_prompt)
-            #return response
-            #return chat_completion.choices[0].message.content
-            return chat_completion
+            for message in chat_completion:
+                yield message.choices[0].delta.get('content', '')
         except Exception as e:
             print("Error:", e)
             return None
