@@ -28,7 +28,7 @@ if prompt := st.chat_input("Your answer"):
         st.markdown(prompt)
     
     with st.chat_message("assistant"):
-        response = st.write_stream(chatbot.ask_model(prompt))  # Get the response
+        response = st.write_stream(chatbot.ask_model(st.session_state.messages))  # Get the response
         
     # Add assistant response to chat history
     st.session_state.messages.append({"role": "assistant", "content": response})
