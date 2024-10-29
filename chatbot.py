@@ -8,15 +8,20 @@ class Chatbot:
         self.client = InferenceClient()
 
     def ask_model(self, prompt):
+        
         try:
-            initial_prompt = "You are a helpful assistant. Your main and only goal is to answer the questions given by the user or respond to their sentences \
-                              without leaving the context. You should not do write any other things than that. If the thing the user given doesn't make sense \
-                              just ask the user to elaborate on that. Now, answer or respond to the following:" 
-            final_prompt = initial_prompt + prompt
-            if not final_prompt.endswith("."):
-                final_prompt += "."
-            response = self.client.text_generation(model=self.model_name, prompt=final_prompt)
-            return response
+            chat_completion = client.chat.completions.create(
+            model=self.model_name,
+            messages=[
+                {"role": "system", "content": "You are a helpful an honest programming assistant."},
+                {"role": "user", "content": prompt},
+            ],
+            stream=True,
+            max_tokens=500,
+            )
+            #response = self.client.text_generation(model=self.model_name, prompt=final_prompt)
+            #return response
+            return chat_completion.choices[0].message
         except Exception as e:
             print("Error:", e)
             return None
