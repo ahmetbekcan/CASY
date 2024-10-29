@@ -9,7 +9,7 @@ class Chatbot:
 
     def ask_model(self, prompt):
         try:
-            initial_prompt = "You are a helpful assistant. Your main goal is to answer the questions given by the user or respond to their sentences like a normal person." 
+            initial_prompt = "You are a helpful assistant. Your main goal is to answer the questions given by the user or respond to their sentences without leaving the context. Now, answer or respond to the following." 
             final_prompt = initial_prompt + prompt
             response = self.client.text_generation(model=self.model_name, prompt=final_prompt)
             return response
