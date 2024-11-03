@@ -10,15 +10,13 @@ if ("terms_accepted" not in st.session_state):
 
 chatbot = st.session_state.chatbot
 
-print(st.session_state.terms_accepted)
-
 with st.sidebar:
     st.title("🤖 Casy")
     st.caption("Survey chatbot")
     if(not st.session_state.terms_accepted):
         with (st.form("terms")):
             terms_accepted = st.checkbox("I have read and accepted the terms and conditions.")
-            with st.expander("View Terms and Conditions"):
+            with st.expander("⚖️ View Terms and Conditions"):
                 st.write("""
                 **Terms and Conditions**
                 
@@ -33,12 +31,22 @@ with st.sidebar:
         if (submitted):
             st.session_state.terms_accepted = terms_accepted
 
-if (st.session_state.terms_accepted):
-    # Initialize chat history
-    if "messages" not in st.session_state:
+def clear_chat_history():
         st.session_state.messages = []
         with st.chat_message("assistant"):
             st.session_state.initial_message = st.write_stream(chatbot.ask_model([{"role": "user", "content": "Hi!"}]))
+
+if (st.session_state.terms_accepted):
+    # Initialize chat history
+    if "messages" not in st.session_state:
+        clear_chat_history()
+
+    with st.sidebar:
+        st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
+
+    with st.sidebar:
+        with st.expander("Developer settings"):
+            st.slider("Temperature",min_value=0,max_value=1024)
 
     # Display chat messages from history on app rerun
     for message in st.session_state.messages:
