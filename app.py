@@ -44,10 +44,36 @@ if (st.session_state.terms_accepted):
     with st.sidebar:
         st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
 
+    #Developer settings
     with st.sidebar:
         with st.expander("Developer settings"):
-            st.slider("Temperature",min_value=0,max_value=1024)
+            temperature = st.slider(
+                "Temperature (controls randomness of the generations)",
+                min_value=0.0,
+                max_value=2.0,
+                value=chatbot.temperature,
+                step=0.1
+            )
 
+            # Slider for max tokens
+            max_tokens = st.slider(
+                "Maximum Tokens",
+                min_value=1,
+                max_value=2048,
+                value=chatbot.max_tokens,
+                step=1
+            )
+
+            # Slider for top_p
+            top_p = st.slider(
+                "Top P (fraction of most likely next words to sample)",
+                min_value=0.0,
+                max_value=0.99,
+                value=chatbot.top_p,
+                step=0.01
+            )
+            st.button("Apply Settings", on_click=chatbot.set_parameters(temperature=temperature,max_tokens=max_tokens,top_p=top_p))
+        
     # Display chat messages from history on app rerun
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
