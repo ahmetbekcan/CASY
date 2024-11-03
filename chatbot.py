@@ -4,7 +4,7 @@ import os
 class Chatbot:
     def __init__(self):
         # Define your model name
-        self.model_name = os.getenv('MODEL_NAME')
+        self.model_name = os.getenv('MODEL_NAME') or "meta-llama/Llama-3.2-3B-Instruct"
         self.client = InferenceClient()
 
     def ask_model(self, all_messages):
