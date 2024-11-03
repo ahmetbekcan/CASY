@@ -10,24 +10,30 @@ if ("terms_accepted" not in st.session_state):
 
 chatbot = st.session_state.chatbot
 
-st.title("Casy")
+print(st.session_state.terms_accepted)
 
-if (not st.session_state.terms_accepted):
-    st.session_state.terms_accepted = st.checkbox("I have read and accepted the terms and conditions.")
-    
-    with st.expander("View Terms and Conditions"):
-        st.write("""
-        **Terms and Conditions**
-        
-        1. Your data will be used in accordance with our policies.
-        2. You agree not to misuse the service.
-        3. Any violations may lead to account suspension.
-        4. For more information, please refer to our policy guidelines.
-        """)
-    submitted = st.button("Accept")
-    if (submitted and not st.session_state.terms_accepted):
-        st.warning('Please accept the terms and conditions to proceed to the survey!', icon="⚠️")
-else:
+with st.sidebar:
+    st.title("🤖 Casy")
+    st.caption("Survey chatbot")
+    if(not st.session_state.terms_accepted):
+        with (st.form("terms")):
+            terms_accepted = st.checkbox("I have read and accepted the terms and conditions.")
+            with st.expander("View Terms and Conditions"):
+                st.write("""
+                **Terms and Conditions**
+                
+                1. Your data will be used in accordance with our policies.
+                2. You agree not to misuse the service.
+                3. Any violations may lead to account suspension.
+                4. For more information, please refer to our policy guidelines.
+                """)
+            submitted = st.form_submit_button()
+            if (submitted and not terms_accepted):
+                st.warning('Please accept the terms and conditions to proceed to the survey!', icon="⚠️")
+        if (submitted):
+            st.session_state.terms_accepted = terms_accepted
+
+if (st.session_state.terms_accepted):
     # Initialize chat history
     if "messages" not in st.session_state:
         st.session_state.messages = []
