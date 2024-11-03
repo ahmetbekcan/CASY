@@ -10,6 +10,18 @@ chatbot = st.session_state.chatbot
 
 st.title("CASY")
 
+terms_accepted = st.checkbox("I agree to the [Terms and Conditions](https://www.example.com/terms)")
+
+with st.expander("View Terms and Conditions"):
+    st.write("""
+    **Terms and Conditions**
+    
+    1. Your data will be used in accordance with our policies.
+    2. You agree not to misuse the service.
+    3. Any violations may lead to account suspension.
+    4. For more information, please refer to our policy guidelines.
+    """)
+
 # Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
