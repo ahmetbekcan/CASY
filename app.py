@@ -1,14 +1,28 @@
 import streamlit as st
 from chatbot import Chatbot
+from agent import Agent
+import copy
+
+def read_file_to_variable(file_path):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        content = file.read()
+    return content
 
 #initialize values
 if "chatbot" not in st.session_state:
     st.session_state.chatbot = Chatbot()
 
+if "participant" not in st.session_state:
+    st.session_state.participant = Agent()
+    #instruct = read_file_to_variable("test_data/participant_instruct.txt") + read_file_to_variable("test_data/alex.txt") 
+    instruct = "Your goal is to answwer survey questions. You should only answer the questions by using your background. You shouldn't ask any questions.\n" + read_file_to_variable("test_data/alex.txt") 
+    st.session_state.participant.set_instruct(instruct)
+
 if ("terms_accepted" not in st.session_state):
     st.session_state.terms_accepted = False
 
 chatbot = st.session_state.chatbot
+participant = st.session_state.participant
 
 with st.sidebar:
     st.title("🤖 Casy")
@@ -36,6 +50,33 @@ def clear_chat_history():
         with st.chat_message("assistant"):
             st.session_state.initial_message = st.write_stream(chatbot.ask_model([{"role": "user", "content": "Hi!"}]))
 
+def reverse_message_roles(msgs):
+    for msg in msgs:
+        if (msg['role'] == "user"):
+            msg['role'] = "assistant"
+        else:
+            msg['role'] = "user"
+
+def simulate_answer():
+    reverse_message_roles(st.session_state.messages)
+    res = ''.join(participant.ask_model(st.session_state.messages))
+    reverse_message_roles(st.session_state.messages)
+    st.session_state.messages.append({"role": "user", "content": res})
+    if res:
+        res2 = ''.join(chatbot.ask_model(st.session_state.messages))
+        st.session_state.messages.append({"role": "assistant", "content": res2})
+        if res2:
+            reverse_message_roles(st.session_state.messages)
+            res3 = ''.join(participant.ask_model(st.session_state.messages))
+            reverse_message_roles(st.session_state.messages)
+            st.session_state.messages.append({"role": "user", "content": res3})
+
+def simulate_answers():
+    i = 0
+    while (i < no_of_questions):
+        simulate_answer()
+        i+=1
+
 if (st.session_state.terms_accepted):
     # Initialize chat history
     if "messages" not in st.session_state:
@@ -43,6 +84,9 @@ if (st.session_state.terms_accepted):
 
     with st.sidebar:
         st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
+        with st.expander("Survey Simulation"):
+            no_of_questions = st.slider("Number of questions", min_value=1,max_value=10,value=3,step=1)
+            st.button('Simulate Survey', on_click=simulate_answers)
 
     #Developer settings
     with st.sidebar:
