@@ -21,6 +21,9 @@ if "participant" not in st.session_state:
 if ("terms_accepted" not in st.session_state):
     st.session_state.terms_accepted = False
 
+if ("evaluation" not in st.session_state):
+    st.session_state.evaluation = ""
+    
 chatbot = st.session_state.chatbot
 participant = st.session_state.participant
 
@@ -77,6 +80,22 @@ def simulate_answers():
         simulate_answer()
         i+=1
 
+def evaluate_survey():
+    evaluator = Agent()
+    evaluator.instruct="You are an evaluator. You will evaluate the given survey questions that are asked by the assistant. \
+                        You should only evaluate the questions based on their relevancy to technical debt,\
+                        follow up rate (the rate of follow up questions that are asked when necessary) \
+                        and uniqueness (the percantage of questions that are different).\
+                        You should represent the results by listing them in percentages such as \n\
+                        Relevancy: 80%\n\
+                        Follow-up rate: 50%\n\
+                        Uniqueness: 90%\n\
+                        You should not write any other thing than that."
+    #evaluator.set_parameters(temperature=0.2,max_tokens=250)
+    print(st.session_state.messages)
+    res = ''.join(evaluator.ask_model(st.session_state.messages))
+    st.session_state.evaluation = res
+
 if (st.session_state.terms_accepted):
     # Initialize chat history
     if "messages" not in st.session_state:
@@ -87,6 +106,10 @@ if (st.session_state.terms_accepted):
         with st.expander("Survey Simulation"):
             no_of_questions = st.slider("Number of questions", min_value=1,max_value=10,value=3,step=1)
             st.button('Simulate Survey', on_click=simulate_answers)
+        with st.expander("Survey Evaluation"):
+            st.button("Evaluate", on_click=evaluate_survey)
+            if (st.session_state.evaluation is not None and st.session_state.evaluation != ""):
+                st.write(st.session_state.evaluation)
 
     #Developer settings
     with st.sidebar:
