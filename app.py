@@ -60,24 +60,25 @@ def reverse_message_roles(msgs):
         else:
             msg['role'] = "user"
 
-def simulate_answer():
-    reverse_message_roles(st.session_state.messages)
-    res = ''.join(participant.ask_model(st.session_state.messages))
-    reverse_message_roles(st.session_state.messages)
-    st.session_state.messages.append({"role": "user", "content": res})
-    if res:
-        res2 = ''.join(chatbot.ask_model(st.session_state.messages))
-        st.session_state.messages.append({"role": "assistant", "content": res2})
-        if res2:
-            reverse_message_roles(st.session_state.messages)
-            res3 = ''.join(participant.ask_model(st.session_state.messages))
-            reverse_message_roles(st.session_state.messages)
-            st.session_state.messages.append({"role": "user", "content": res3})
+def simulate_answer(first):
+    if (first):
+        reverse_message_roles(st.session_state.messages)
+        res = ''.join(participant.ask_model(st.session_state.messages))
+        reverse_message_roles(st.session_state.messages)
+        st.session_state.messages.append({"role": "user", "content": res})
+    
+    res2 = ''.join(chatbot.ask_model(st.session_state.messages))
+    st.session_state.messages.append({"role": "assistant", "content": res2})
+    if res2:
+        reverse_message_roles(st.session_state.messages)
+        res3 = ''.join(participant.ask_model(st.session_state.messages))
+        reverse_message_roles(st.session_state.messages)
+        st.session_state.messages.append({"role": "user", "content": res3})
 
 def simulate_answers():
     i = 0
     while (i < no_of_questions):
-        simulate_answer()
+        simulate_answer(i==0)
         i+=1
 
 def evaluate_survey():
