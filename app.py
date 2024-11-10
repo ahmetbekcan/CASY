@@ -15,7 +15,7 @@ if "chatbot" not in st.session_state:
 if "participant" not in st.session_state:
     st.session_state.participant = Agent()
     #instruct = read_file_to_variable("test_data/participant_instruct.txt") + read_file_to_variable("test_data/alex.txt") 
-    instruct = "Your goal is to answwer survey questions. You should only answer the questions by using your background. You shouldn't ask any questions.\n" + read_file_to_variable("test_data/alex.txt") 
+    instruct = "Your goal is to answer survey questions. You should only answer the questions by using your background. You shouldn't ask any questions.\n" + read_file_to_variable("test_data/alex.txt") 
     st.session_state.participant.set_instruct(instruct)
 
 if ("terms_accepted" not in st.session_state):
