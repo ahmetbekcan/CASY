@@ -1,7 +1,6 @@
 import streamlit as st
 from chatbot import Chatbot
 from agent import Agent
-import copy
 
 def read_file_to_variable(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
@@ -23,10 +22,17 @@ if ("terms_accepted" not in st.session_state):
 
 if ("evaluation" not in st.session_state):
     st.session_state.evaluation = ""
-    
+
+if ("survey_completed" not in st.session_state):
+    st.session_state.survey_completed = False
+#initialize values
+
+#initialize agents
 chatbot = st.session_state.chatbot
 participant = st.session_state.participant
+#initialize agents
 
+#Terms and conditions
 with st.sidebar:
     st.title("🤖 Casy")
     st.caption("Survey chatbot")
@@ -47,7 +53,9 @@ with st.sidebar:
                 st.warning('Please accept the terms and conditions to proceed to the survey!', icon="⚠️")
         if (submitted):
             st.session_state.terms_accepted = terms_accepted
+#Terms and conditions
 
+#Events
 def clear_chat_history():
         st.session_state.messages = []
         with st.chat_message("assistant"):
@@ -84,6 +92,8 @@ def simulate_answers():
 def evaluate_survey():
     evaluator = Agent()
     evaluator.instruct="You are an evaluator. You will evaluate the given survey questions that are asked by the assistant. \
+                        You should only evaluate the behaviour of the assistant.\
+                        Behaivour of the user should not affect the evaluation quality.\
                         You should only evaluate the questions based on their relevancy to technical debt,\
                         follow up rate (the rate of follow up questions that are asked when necessary) \
                         and uniqueness (the percantage of questions that are different).\
@@ -96,10 +106,13 @@ def evaluate_survey():
     st.session_state.evaluation = res
 
 def complete_survey():
-    st.session_state.messages.append({"role": "user", "content": "I want to complete the survey. Don't ask any further questions."})
+    st.session_state.messages.append({"role": "user", "content": "End the survey. Don't ask any further questions."})
     res = ''.join(chatbot.ask_model(st.session_state.messages))
     st.session_state.messages.append({"role": "assistant", "content": res})
+    st.session_state.survey_completed = True
+#Events
 
+#UI
 if (st.session_state.terms_accepted):
     # Initialize chat history
     if "messages" not in st.session_state:
@@ -127,7 +140,6 @@ if (st.session_state.terms_accepted):
                 step=0.1
             )
 
-            # Slider for max tokens
             max_tokens = st.slider(
                 "Maximum Tokens",
                 min_value=1,
@@ -136,7 +148,6 @@ if (st.session_state.terms_accepted):
                 step=1
             )
 
-            # Slider for top_p
             top_p = st.slider(
                 "Top P (fraction of most likely next words to sample)",
                 min_value=0.0,
@@ -146,7 +157,6 @@ if (st.session_state.terms_accepted):
             )
             st.button("Apply Settings", on_click=chatbot.set_parameters(temperature=temperature,max_tokens=max_tokens,top_p=top_p))
         
-    # Display chat messages from history on app rerun
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
@@ -169,3 +179,4 @@ if (st.session_state.terms_accepted):
             
         # Add assistant response to chat history
         st.session_state.messages.append({"role": "assistant", "content": response})
+#UI
