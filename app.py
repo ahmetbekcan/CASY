@@ -92,10 +92,13 @@ def evaluate_survey():
                         Follow-up rate: 50%\n\
                         Uniqueness: 90%\n\
                         You should not write any other thing than that."
-    #evaluator.set_parameters(temperature=0.2,max_tokens=250)
-    print(st.session_state.messages)
     res = ''.join(evaluator.ask_model(st.session_state.messages))
     st.session_state.evaluation = res
+
+def complete_survey():
+    st.session_state.messages.append({"role": "user", "content": "I want to complete the survey. Don't ask any further questions."})
+    res = ''.join(chatbot.ask_model(st.session_state.messages))
+    st.session_state.messages.append({"role": "assistant", "content": res})
 
 if (st.session_state.terms_accepted):
     # Initialize chat history
@@ -103,7 +106,8 @@ if (st.session_state.terms_accepted):
         clear_chat_history()
 
     with st.sidebar:
-        st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
+        st.button("Complete Survey", on_click=complete_survey)
+        st.button('Clear Chat History', on_click=clear_chat_history)
         with st.expander("Survey Simulation"):
             no_of_questions = st.slider("Number of questions", min_value=1,max_value=10,value=3,step=1)
             st.button('Simulate Survey', on_click=simulate_answers)
