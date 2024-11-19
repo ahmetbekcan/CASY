@@ -1,4 +1,4 @@
-from agent import Agent
+from models.agent import Agent
 
 class Chatbot(Agent):
     def __init__(self, **kwargs):
