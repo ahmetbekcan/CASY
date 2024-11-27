@@ -30,7 +30,7 @@ class Agent:
 
     def ask_model_reversed(self,all_messages):
         self._reverse_message_roles(all_messages)
-        res = self.ask_model(all_messages)
+        res = ''.join(self.ask_model(all_messages))
         self._reverse_message_roles(all_messages)
         return res
 
