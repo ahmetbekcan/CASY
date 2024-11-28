@@ -1,6 +1,7 @@
 import streamlit as st
 from models.chatbot import Chatbot
 from models.agent import Agent
+from test.survey_simulator import SurveySimulator
 
 def read_file_to_variable(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
@@ -61,33 +62,14 @@ def clear_chat_history():
         with st.chat_message("assistant"):
             st.session_state.initial_message = st.write_stream(chatbot.ask_model([{"role": "user", "content": "Hi!"}]))
 
-def reverse_message_roles(msgs):
-    for msg in msgs:
-        if (msg['role'] == "user"):
-            msg['role'] = "assistant"
-        else:
-            msg['role'] = "user"
-
-def simulate_answer(first):
-    if (first):
-        reverse_message_roles(st.session_state.messages)
-        res = ''.join(participant.ask_model(st.session_state.messages))
-        reverse_message_roles(st.session_state.messages)
-        st.session_state.messages.append({"role": "user", "content": res})
+def simulate_survey():
+    simulator = SurveySimulator(number_of_questions=no_of_questions,
+                                offtopic_answer_rate=rate_of_offtopic,
+                                uninformative_answer_rate=rate_of_uninformative,
+                                initial_messages=st.session_state.messages)
+    simulator.simulate(chatbot,participant)
+    st.session_state.messages = simulator.get_simulation_result()
     
-    res2 = ''.join(chatbot.ask_model(st.session_state.messages))
-    st.session_state.messages.append({"role": "assistant", "content": res2})
-    if res2:
-        reverse_message_roles(st.session_state.messages)
-        res3 = ''.join(participant.ask_model(st.session_state.messages))
-        reverse_message_roles(st.session_state.messages)
-        st.session_state.messages.append({"role": "user", "content": res3})
-
-def simulate_answers():
-    i = 0
-    while (i < no_of_questions):
-        simulate_answer(i==0)
-        i+=1
 
 def evaluate_survey():
     evaluator = Agent()
@@ -122,8 +104,10 @@ if (st.session_state.terms_accepted):
         st.button("Complete Survey", on_click=complete_survey)
         st.button('Clear Chat History', on_click=clear_chat_history)
         with st.expander("Survey Simulation"):
-            no_of_questions = st.slider("Number of questions", min_value=1,max_value=10,value=3,step=1)
-            st.button('Simulate Survey', on_click=simulate_answers)
+            no_of_questions = st.slider("Number Of Questions", min_value=1,max_value=30,value=5,step=1)
+            rate_of_offtopic = st.slider("Offtopic Answer Rate", min_value=0.,max_value=1.,value=0.1,step=0.01)
+            rate_of_uninformative = st.slider("Uninformative Answer Rate", min_value=0.,max_value=1.,value=0.1,step=0.01)
+            st.button('Simulate Survey', on_click=simulate_survey)
         with st.expander("Survey Evaluation"):
             st.button("Evaluate", on_click=evaluate_survey)
             if (st.session_state.evaluation is not None and st.session_state.evaluation != ""):

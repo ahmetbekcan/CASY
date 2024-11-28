@@ -21,6 +21,19 @@ class Agent:
     def set_instruct(self, model_instruct):
         self.instruct = model_instruct
 
+    def _reverse_message_roles(self, msgs):
+        for msg in msgs:
+            if (msg['role'] == "user"):
+                msg['role'] = "assistant"
+            else:
+                msg['role'] = "user"
+
+    def ask_model_reversed(self,all_messages):
+        self._reverse_message_roles(all_messages)
+        res = ''.join(self.ask_model(all_messages))
+        self._reverse_message_roles(all_messages)
+        return res
+
     def ask_model(self, all_messages):
         try:
             chat_completion = self.client.chat.completions.create(
