@@ -63,7 +63,10 @@ def clear_chat_history():
             st.session_state.initial_message = st.write_stream(chatbot.ask_model([{"role": "user", "content": "Hi!"}]))
 
 def simulate_survey():
-    simulator = SurveySimulator(number_of_questions=no_of_questions, initial_messages=st.session_state.messages)
+    simulator = SurveySimulator(number_of_questions=no_of_questions,
+                                offtopic_answer_rate=rate_of_offtopic,
+                                uninformative_answer_rate=rate_of_uninformative,
+                                initial_messages=st.session_state.messages)
     simulator.simulate(chatbot,participant)
     st.session_state.messages = simulator.get_simulation_result()
     
@@ -101,7 +104,9 @@ if (st.session_state.terms_accepted):
         st.button("Complete Survey", on_click=complete_survey)
         st.button('Clear Chat History', on_click=clear_chat_history)
         with st.expander("Survey Simulation"):
-            no_of_questions = st.slider("Number of questions", min_value=1,max_value=10,value=3,step=1)
+            no_of_questions = st.slider("Number Of Questions", min_value=1,max_value=30,value=5,step=1)
+            rate_of_offtopic = st.slider("Offtopic Answer Rate", min_value=0.,max_value=1.,value=0.1,step=0.01)
+            rate_of_uninformative = st.slider("Uninformative Answer Rate", min_value=0.,max_value=1.,value=0.1,step=0.01)
             st.button('Simulate Survey', on_click=simulate_survey)
         with st.expander("Survey Evaluation"):
             st.button("Evaluate", on_click=evaluate_survey)
