@@ -1,0 +1,28 @@
+/* styles.css */
+.title {
+    font-size: 30px;
+    color: #4CAF50;
+    font-weight: bold;
+    text-align: center;
+}
+
+.stTextInput, .stTextArea {
+    border: 2px solid #4CAF50;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.stButton>button {
+    background-color: #8caf4c;
+    color: white;
+    border-radius: 8px;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.stButton>button:hover {
+    background-color: #45a049;
+}

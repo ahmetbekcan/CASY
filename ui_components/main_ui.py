@@ -1,5 +1,6 @@
 import streamlit as st
 import ui_components
+import utils
 
 class MainUI:
     def __init__(self, chatbot):
@@ -37,6 +38,11 @@ class MainUI:
         ui_chat.render()
 
     def render(self):
+
+        if not st.session_state.get("css", None):
+            st.session_state.css = utils.read_file("ui_components/styles.css")
+        st.markdown(f"<style>{st.session_state.css}</style>", unsafe_allow_html=True) #Global app style can be set here
+
         if not st.session_state.get("terms_accepted", False):
             self.render_terms_and_conditions()
             return
