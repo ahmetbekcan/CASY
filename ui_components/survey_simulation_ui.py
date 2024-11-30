@@ -1,5 +1,5 @@
 import streamlit as st
-from test.survey_simulator import SurveySimulator
+from tests.survey_test import *
 
 class SurveySimulationUI:
     def __init__(self, chatbot):

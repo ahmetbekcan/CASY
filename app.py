@@ -1,7 +1,6 @@
 import streamlit as st
 import ui_components
-from models.agent import Agent
-from models.chatbot import Chatbot
+from models.large_language_models import *
 
 if "chatbot" not in st.session_state:
     st.session_state.chatbot = Chatbot()

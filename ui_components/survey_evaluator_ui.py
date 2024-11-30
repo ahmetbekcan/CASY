@@ -1,5 +1,5 @@
 import streamlit as st
-from models.agent import Agent
+from models.large_language_models import Agent
 
 class SurveyEvaluator:
     def __init__(self, chatbot):

@@ -1,5 +1,4 @@
-from models.agent import Agent
-from models.chatbot import Chatbot
+from models.large_language_models import *
 import random
 from enum import IntEnum
 from utils import read_file
@@ -23,7 +22,7 @@ class SurveySimulator:
         self.surveyor = Chatbot()
         self.participant = Agent()
         self.participant.set_instruct("Your goal is to answer survey questions. You should only answer the questions by using your background.\
-                                      You shouldn't ask any questions.\n" + read_file("test_data/alex.txt") )
+                                      You shouldn't ask any questions.\n" + read_file("tests/test_data/alex.txt") )
 
     def _normalize_weights(self):
         sum = self.normal_weight + self.offtopic_weight + self.uninformative_weight
