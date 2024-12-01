@@ -20,7 +20,7 @@ class SurveySimulator:
         self.lazy_bot = self._get_lazy_bot()
         self.simulation_data = []
         self.surveyor = Chatbot()
-        self.participant = Agent()
+        self.participant = Agent(max_tokens=400)
         self.participant.set_instruct("Your goal is to answer survey questions. You should only answer the questions by using your background.\
                                       You shouldn't ask any questions.\n" + read_file(f"tests/test_data/{agent}.txt") )
 
