@@ -26,7 +26,7 @@ class MainUI:
         ui_survey_simulation.render()
 
     def render_survey_evaluator(self):
-        ui_survey_evaluator = ui_components.SurveyEvaluator(self.chatbot)
+        ui_survey_evaluator = ui_components.SurveyEvaluatorUI()
         ui_survey_evaluator.render()
 
     def render_developer_settings(self):
