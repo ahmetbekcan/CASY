@@ -20,4 +20,3 @@
 20. Did you follow any project cycle or process management approach to solve problems during the project?
 21. Can you discuss the problems encountered during this project development process and their potential root causes? You can also mention the solutions you applied.
 22. (From now on, you should ask follow-up questions that will help you to understand technical debts encountered by the participant, how they solved the issues etc., in detail)
-23. what is an apple?
