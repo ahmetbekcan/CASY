@@ -9,6 +9,7 @@ class SurveySimulationUI:
         self.rate_of_uninformative = 0.1
         self.chatbot = chatbot
         self.agent = "Alex"
+        self.log_data = False
     def render(self):
         with st.expander("Survey Simulation"):
             self.agent = st.radio(
@@ -32,6 +33,7 @@ class SurveySimulationUI:
                 'Simulate Survey',
                 on_click=self.simulate_survey,
             )
+            self.log_data = st.checkbox("Log Data",self.log_data)
 
     def simulate_survey(self):
         simulator = SurveySimulator(
@@ -40,8 +42,9 @@ class SurveySimulationUI:
             offtopic_answer_weight=self.rate_of_offtopic,
             uninformative_answer_weight=self.rate_of_uninformative,
             initial_messages=st.session_state.messages,
-            agent = self.agent
+            agent = self.agent,
+            log_data=self.log_data
         )
         simulator.set_surveyor(self.chatbot)
         simulator.simulate()
-        st.session_state.messages = simulator.get_simulation_result()
+        st.session_state.messages = simulator.get_simulation_messages()
