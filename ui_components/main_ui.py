@@ -1,6 +1,6 @@
 import streamlit as st
 import ui_components
-import utils
+from utils import *
 
 class MainUI:
     def __init__(self, chatbot):
@@ -37,11 +37,19 @@ class MainUI:
         ui_chat = ui_components.ChatUI(self.chatbot)
         ui_chat.render()
 
+    def render_login_ui(self):
+        ui_login = ui_components.LoginUI()
+        ui_login.render()
+
     def render(self):
 
         if not st.session_state.get("css", None):
-            st.session_state.css = utils.read_file("ui_components/styles.css")
+            st.session_state.css = read_file("ui_components/styles.css")
         st.markdown(f"<style>{st.session_state.css}</style>", unsafe_allow_html=True) #Global app style can be set here
+
+        if not st.session_state.get("logged_in", False):
+            self.render_login_ui()
+            return
 
         if not st.session_state.get("terms_accepted", False):
             self.render_terms_and_conditions()

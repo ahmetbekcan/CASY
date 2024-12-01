@@ -9,7 +9,7 @@ class PromptType(IntEnum):
     UNINFORMATIVE = 3
 
 class SurveySimulator:
-    def __init__(self, number_of_questions = 5, normal_answer_weight = 0.8, offtopic_answer_weight = 0.1, uninformative_answer_weight = 0.1, initial_messages = []):
+    def __init__(self, number_of_questions = 5, normal_answer_weight = 0.8, offtopic_answer_weight = 0.1, uninformative_answer_weight = 0.1, initial_messages = [], agent = "alex"):
         self.no_of_questions = number_of_questions
         self.normal_weight = normal_answer_weight
         self.offtopic_weight = offtopic_answer_weight
@@ -22,7 +22,7 @@ class SurveySimulator:
         self.surveyor = Chatbot()
         self.participant = Agent()
         self.participant.set_instruct("Your goal is to answer survey questions. You should only answer the questions by using your background.\
-                                      You shouldn't ask any questions.\n" + read_file("tests/test_data/alex.txt") )
+                                      You shouldn't ask any questions.\n" + read_file(f"tests/test_data/{agent}.txt") )
 
     def _normalize_weights(self):
         sum = self.normal_weight + self.offtopic_weight + self.uninformative_weight
@@ -37,9 +37,8 @@ class SurveySimulator:
         return bot
     
     def _get_lazy_bot(self):
-        bot = Agent()
-        bot.set_instruct("You are a person who is currently participating in a survey.\
-                         You should answer the given question only with the word 'Sure' or 'OK' or 'I would'.")
+        bot = Agent(max_tokens=5)
+        bot.set_instruct("You are a person who is currently participating in a survey.")
         return bot
     
     def _get_answer_no(self):

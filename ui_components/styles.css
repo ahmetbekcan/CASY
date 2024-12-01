@@ -1,28 +1,78 @@
 /* styles.css
-.title {
-    font-size: 30px;
-    color: #4CAF50;
-    font-weight: bold;
-    text-align: center;
+/* Sidebar Styling */
+.stSidebar {
+    position: relative;
+}
+/* Add the logo to the sidebar */
+.stSidebar img {
+    position: absolute;
+    top: 10px; 
+    left: 10px;  
+    width: 150px; 
+    height: auto; 
+    background-image: url('file:///Users/isiksila/Desktop/logo.png');  
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
-.stTextInput, .stTextArea {
-    border: 2px solid #4CAF50;
-    border-radius: 8px;
-    padding: 10px;
-}
-
+/* Button Styling */
 .stButton>button {
-    background-color: #8caf4c;
-    color: white;
+    background-color: #74B9FF; 
+    color: white; 
     border-radius: 8px;
-    border: none;
-    padding: 10px 20px;
+    padding: 12px 24px;
     font-size: 16px;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    border: none;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 .stButton>button:hover {
-    background-color: #45a049;
-} */
+    background-color: #5D99FF; 
+    transform: scale(1.05);
+}
+
+/* Chat Background */
+body {
+    background-color: #FFFFFF;  
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    color: #2D3436;  
+}
+
+/* Centering the content */
+.container {
+    margin: 20px;
+    padding: 20px;
+}
+
+/* Side Panel */
+.sidebar {
+    background-color: #D3D3D3;  
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Buttons in the sidebar */
+.sidebar .stButton>button {
+    margin-bottom: 10px;
+}
+
+/* Chat Bubbles - user and assistant */
+.stMessage {
+    background-color: #74B9FF;  
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: white;
+}
+
+.stMessage.assistant {
+    background-color: #D3D3D3;  
+    color: #2D3436;  
+}
