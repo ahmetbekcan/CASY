@@ -23,7 +23,7 @@ def initialize_database():
 class LoginUI:
     def render(self):
         render_logo()
-        st.title("Welcome to CASY! Login or Sign-Up")
+        st.title("Welcome to CASY!",)
         tab1, tab2, tab3 = st.tabs(["Log In", "Sign Up", "Admin View"])
         with tab1:
             self.render_log_in()

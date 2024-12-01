@@ -8,9 +8,14 @@ class SurveySimulationUI:
         self.rate_of_offtopic = 0.1
         self.rate_of_uninformative = 0.1
         self.chatbot = chatbot
-
+        self.agent = "Alex"
     def render(self):
         with st.expander("Survey Simulation"):
+            self.agent = st.radio(
+                            "Select a character:",
+                            ("Alex", "Ada", "Andrew"),index=0
+                        )
+            
             self.no_of_questions = st.slider(
                 "Number Of Questions", min_value=1, max_value=30, value=self.no_of_questions, step=1
             )
@@ -34,7 +39,8 @@ class SurveySimulationUI:
             normal_answer_weight = self.rate_of_normal,
             offtopic_answer_weight=self.rate_of_offtopic,
             uninformative_answer_weight=self.rate_of_uninformative,
-            initial_messages=st.session_state.messages
+            initial_messages=st.session_state.messages,
+            agent = self.agent
         )
         simulator.set_surveyor(self.chatbot)
         simulator.simulate()
