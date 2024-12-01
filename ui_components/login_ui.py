@@ -1,6 +1,7 @@
 import streamlit as st
 import sqlite3
 from typing import Tuple
+from utils import render_logo
 
 # Initialize the database
 def initialize_database():
@@ -21,6 +22,7 @@ def initialize_database():
 
 class LoginUI:
     def render(self):
+        render_logo()
         st.title("Welcome to CASY! Login or Sign-Up")
         tab1, tab2, tab3 = st.tabs(["Log In", "Sign Up", "Admin View"])
         with tab1:
@@ -55,6 +57,8 @@ class LoginUI:
             if success:
                 st.success(message)
                 st.write(f"Welcome back, {email}!")
+                st.session_state.logged_in = True
+                st.rerun()
             else:
                 st.error(message)
 
