@@ -1,6 +1,7 @@
 import streamlit as st
 import ui_components
 from utils import *
+from ui_components.user_role_ui import UserRole
 
 class MainUI:
     def __init__(self, chatbot):
@@ -45,6 +46,27 @@ class MainUI:
         ui_login = ui_components.LoginUI()
         ui_login.render()
 
+    def render_user_role_ui(self):
+        user_role_ui = ui_components.UserRoleUI()
+        user_role_ui.render()
+
+    def render_survey_ui(self):
+        if "messages" not in st.session_state:
+            self.clear_chat_history()
+        
+        # Left side
+        with st.sidebar:
+            st.button("Complete Survey", on_click=self.complete_survey)
+            st.button('Clear Survey', on_click=self.clear_chat_history)
+            st.button("Log out", on_click=self.log_out)
+            if (st.session_state.user_id == "casy"):
+                self.render_survey_simulation()
+                self.render_survey_evaluator()
+                self.render_developer_settings()
+
+        # Chat in the right side
+        self.render_chat_ui()
+    
     def render(self):
 
         if not st.session_state.get("css", None):
@@ -55,23 +77,14 @@ class MainUI:
             self.render_login_ui()
             return
 
+        if (st.session_state.get("user_role", UserRole.NONE) == UserRole.NONE):
+            self.render_user_role_ui()
+            return
+
         if (not st.session_state.user_id == "casy"):
             if not st.session_state.get("terms_accepted", False):
                 self.render_terms_and_conditions()
                 return
 
-        if "messages" not in st.session_state:
-            self.clear_chat_history()
-
-        # Left side
-        with st.sidebar:
-            st.button("Complete Survey", on_click=self.complete_survey)
-            st.button('Clear Chat History', on_click=self.clear_chat_history)
-            st.button("Log out", on_click=self.log_out)
-            if (st.session_state.user_id == "casy"):
-                self.render_survey_simulation()
-                self.render_survey_evaluator()
-                self.render_developer_settings()
-
-        # Chat in the right side
-        self.render_chat_ui()
+        self.render_survey_ui()
+        

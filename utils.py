@@ -27,5 +27,16 @@ def initialize_database():
             password TEXT NOT NULL
         )
     """)
+
+    c.execute("""
+            CREATE TABLE IF NOT EXISTS surveys (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                survey_name TEXT NOT NULL,
+                survey_code TEXT UNIQUE NOT NULL,
+                creator_username TEXT NOT NULL,
+                creation_date TEXT NOT NULL
+            )
+        """)
+    
     conn.commit()
     conn.close()

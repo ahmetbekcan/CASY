@@ -5,3 +5,4 @@ from .chat_ui import ChatUI
 from .survey_evaluator_ui import SurveyEvaluatorUI
 from .main_ui import MainUI
 from .login_ui import LoginUI
+from .user_role_ui import UserRoleUI
