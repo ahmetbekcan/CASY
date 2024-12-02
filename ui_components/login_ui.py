@@ -3,23 +3,6 @@ import sqlite3
 from typing import Tuple
 from utils import render_logo
 
-# Initialize the database
-def initialize_database():
-    conn = sqlite3.connect("app_data.db")
-    c = conn.cursor()
-    c.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            surname TEXT NOT NULL,
-            company TEXT NOT NULL,
-            email TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL
-        )
-    """)
-    conn.commit()
-    conn.close()
-
 class LoginUI:
     def render(self):
         render_logo()
@@ -58,6 +41,7 @@ class LoginUI:
                 st.success(message)
                 st.write(f"Welcome back, {email}!")
                 st.session_state.logged_in = True
+                st.session_state.user_id = email
                 st.rerun()
             else:
                 st.error(message)
@@ -122,8 +106,3 @@ class LoginUI:
             return True, "Login successful!"
         except Exception as e:
             return False, f"An error occurred: {e}"
-
-if __name__ == "__main__":
-    initialize_database()
-    login_ui = LoginUI()
-    login_ui.render()
