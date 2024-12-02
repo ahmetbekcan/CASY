@@ -19,8 +19,7 @@ class MainUI:
         st.session_state.survey_completed = True
     
     def log_out(self):
-        st.session_state.user_id = None
-        st.session_state.logged_in = False
+        st.session_state.clear()
 
     def render_terms_and_conditions(self):
         ui_terms_conditions = ui_components.TermsAndConditionsUI()
