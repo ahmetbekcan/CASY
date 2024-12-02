@@ -5,7 +5,7 @@ from utils import render_logo
 
 # Initialize the database
 def initialize_database():
-    conn = sqlite3.connect("users.db")
+    conn = sqlite3.connect("app_data.db")
     c = conn.cursor()
     c.execute("""
         CREATE TABLE IF NOT EXISTS users (
@@ -68,7 +68,7 @@ class LoginUI:
 
         if st.button("View Registered Users"):
             if admin_password == "casy123":
-                conn = sqlite3.connect("users.db")
+                conn = sqlite3.connect("app_data.db")
                 c = conn.cursor()
                 c.execute("SELECT name, surname, company, email FROM users")
                 rows = c.fetchall()
@@ -94,7 +94,7 @@ class LoginUI:
             return False, "Password must be at least 8 characters long."
 
         try:
-            conn = sqlite3.connect("users.db")
+            conn = sqlite3.connect("app_data.db")
             c = conn.cursor()
             c.execute("""
                 INSERT INTO users (name, surname, company, email, password)
@@ -110,7 +110,7 @@ class LoginUI:
         if not email:
             return False, "Email cannot be empty."
         try:
-            conn = sqlite3.connect("users.db")
+            conn = sqlite3.connect("app_data.db")
             c = conn.cursor()
             c.execute("SELECT password FROM users WHERE email = ?", (email,))
             result = c.fetchone()
