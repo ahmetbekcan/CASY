@@ -16,6 +16,10 @@ class MainUI:
         res = ''.join(st.session_state.chatbot.ask_model(st.session_state.messages))
         st.session_state.messages.append({"role": "assistant", "content": res})
         st.session_state.survey_completed = True
+    
+    def log_out(self):
+        st.session_state.user_id = None
+        st.session_state.logged_in = False
 
     def render_terms_and_conditions(self):
         ui_terms_conditions = ui_components.TermsAndConditionsUI()
@@ -51,9 +55,10 @@ class MainUI:
             self.render_login_ui()
             return
 
-        if not st.session_state.get("terms_accepted", False):
-            self.render_terms_and_conditions()
-            return
+        if (not st.session_state.user_id == "casy"):
+            if not st.session_state.get("terms_accepted", False):
+                self.render_terms_and_conditions()
+                return
 
         if "messages" not in st.session_state:
             self.clear_chat_history()
@@ -62,10 +67,11 @@ class MainUI:
         with st.sidebar:
             st.button("Complete Survey", on_click=self.complete_survey)
             st.button('Clear Chat History', on_click=self.clear_chat_history)
-
-            self.render_survey_simulation()
-            self.render_survey_evaluator()
-            self.render_developer_settings()
+            st.button("Log out", on_click=self.log_out)
+            if (st.session_state.user_id == "casy"):
+                self.render_survey_simulation()
+                self.render_survey_evaluator()
+                self.render_developer_settings()
 
         # Chat in the right side
         self.render_chat_ui()
