@@ -6,7 +6,7 @@ from utils import render_logo
 class LoginUI:
     def render(self):
         render_logo()
-        st.title("Welcome to CASY!",)
+        st.title("Welcome to CASY!")
         tab1, tab2, tab3 = st.tabs(["Log In", "Sign Up", "Admin View"])
         with tab1:
             self.render_log_in()
@@ -64,6 +64,23 @@ class LoginUI:
                         st.write(f"Name: {row[0]}, Surname: {row[1]}, Company: {row[2]}, Email: {row[3]}")
                 else:
                     st.write("No registered users found.")
+            else:
+                st.error("Incorrect admin password.")
+
+        if st.button("View Created Surveys"):
+            if admin_password == "casy123":
+                conn = sqlite3.connect("app_data.db")
+                c = conn.cursor()
+                c.execute("SELECT survey_name, survey_code, creator_username, creation_date FROM surveys")
+                rows = c.fetchall()
+                conn.close()
+
+                if rows:
+                    st.subheader("Created Surveys")
+                    for row in rows:
+                        st.write(f"Survey Name: {row[0]}, Survey Code: {row[1]}, Created By: {row[2]}, Creation Date: {row[3]}")
+                else:
+                    st.write("No created survey found.")
             else:
                 st.error("Incorrect admin password.")
 
