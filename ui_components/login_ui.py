@@ -17,14 +17,14 @@ class LoginUI:
 
     def render_sign_up(self):
         st.header("Sign Up")
-        email = st.text_input("Email", key="signup_email")
+        username = st.text_input("Username", key="signup_username")
         password = st.text_input("Password", type="password", key="signup_password")
         name = st.text_input("Name", key="signup_name")
         surname = st.text_input("Surname", key="signup_surname")
         company = st.text_input("Current/Most Recent Company", key="signup_company")
 
         if st.button("Sign Up"):
-            success, message = self.sign_up_user(name, surname, company, email, password)
+            success, message = self.sign_up_user(name, surname, company, username, password)
             if success:
                 st.success(message)
             else:
@@ -32,16 +32,16 @@ class LoginUI:
 
     def render_log_in(self):
         st.header("Log In")
-        email = st.text_input("Email", key="login_email")
+        username = st.text_input("Username", key="login_username")
         password = st.text_input("Password", type="password", key="login_password")
 
         if st.button("Log In"):
-            success, message = self.log_in(email, password)
+            success, message = self.log_in(username, password)
             if success:
                 st.success(message)
-                st.write(f"Welcome back, {email}!")
+                st.write(f"Welcome back, {username}!")
                 st.session_state.logged_in = True
-                st.session_state.user_id = email
+                st.session_state.user_id = username
                 st.rerun()
             else:
                 st.error(message)
@@ -54,14 +54,14 @@ class LoginUI:
             if admin_password == "casy123":
                 conn = sqlite3.connect("app_data.db")
                 c = conn.cursor()
-                c.execute("SELECT name, surname, company, email FROM users")
+                c.execute("SELECT name, surname, company, username FROM users")
                 rows = c.fetchall()
                 conn.close()
 
                 if rows:
                     st.subheader("Registered Users")
                     for row in rows:
-                        st.write(f"Name: {row[0]}, Surname: {row[1]}, Company: {row[2]}, Email: {row[3]}")
+                        st.write(f"Name: {row[0]}, Surname: {row[1]}, Company: {row[2]}, Username: {row[3]}")
                 else:
                     st.write("No registered users found.")
             else:
@@ -84,13 +84,13 @@ class LoginUI:
             else:
                 st.error("Incorrect admin password.")
 
-    def sign_up_user(self, name: str, surname: str, company: str, email: str, password: str) -> Tuple[bool, str]:
+    def sign_up_user(self, name: str, surname: str, company: str, username: str, password: str) -> Tuple[bool, str]:
         if not name or not surname:
             return False, "Name and Surname cannot be empty."
         if not company:
             return False, "Company name cannot be empty."
-        if not email:
-            return False, "Email cannot be empty."
+        if not username:
+            return False, "Username cannot be empty."
         if len(password) < 8:
             return False, "Password must be at least 8 characters long."
 
@@ -98,26 +98,26 @@ class LoginUI:
             conn = sqlite3.connect("app_data.db")
             c = conn.cursor()
             c.execute("""
-                INSERT INTO users (name, surname, company, email, password)
+                INSERT INTO users (name, surname, company, username, password)
                 VALUES (?, ?, ?, ?, ?)
-            """, (name, surname, company, email, password))
+            """, (name, surname, company, username, password))
             conn.commit()
             conn.close()
             return True, "Account created successfully!"
         except sqlite3.IntegrityError:
-            return False, "Email already exists. Please use a different email."
+            return False, "Username already exists. Please use a different username."
 
-    def log_in(self, email: str, password: str) -> Tuple[bool, str]:
-        if not email:
-            return False, "Email cannot be empty."
+    def log_in(self, username: str, password: str) -> Tuple[bool, str]:
+        if not username:
+            return False, "Username cannot be empty."
         try:
             conn = sqlite3.connect("app_data.db")
             c = conn.cursor()
-            c.execute("SELECT password FROM users WHERE email = ?", (email,))
+            c.execute("SELECT password FROM users WHERE username = ?", (username,))
             result = c.fetchone()
             conn.close()
             if result is None:
-                return False, "Email does not exist. Please sign up first."
+                return False, "Username does not exist. Please sign up first."
             if result[0] != password:
                 return False, "Incorrect password. Please try again."
             return True, "Login successful!"

@@ -23,7 +23,7 @@ def initialize_database():
             name TEXT NOT NULL,
             surname TEXT NOT NULL,
             company TEXT NOT NULL,
-            email TEXT UNIQUE NOT NULL,
+            username TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL
         )
     """)
