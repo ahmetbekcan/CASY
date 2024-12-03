@@ -73,8 +73,13 @@ class UserRoleUI:
         st.title("Join a survey")
         self.entered_survey_code = st.text_input("Enter a survey code:")
         st.button("Join Survey survey", on_click=self.join_survey)
+        if (st.session_state["user_role"] == UserRole.PARTICIPANT):
+            st.rerun()
 
     def render(self):
+        if "user_role" not in st.session_state:
+            st.session_state["user_role"] = UserRole.NONE
+            
         if "created_survey_code" not in st.session_state:
             st.session_state["created_survey_code"] = None
 
@@ -83,8 +88,12 @@ class UserRoleUI:
 
         render_logo()
         st.title("Who are you?",)
-        tab1, tab2 = st.tabs(["I am a researcher", "I am a participant"])
+        tab1, tab2, tab3 = st.tabs(["I am a researcher", "I am a participant", "Other"])
         with tab1:
             self.render_researcher_ui()
         with tab2:
             self.render_participant_ui()
+        with tab3:
+            if (st.button("Log Out")):
+                st.session_state.clear()
+                st.rerun()
