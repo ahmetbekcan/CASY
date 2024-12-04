@@ -70,8 +70,6 @@ def initialize_database():
                 FOREIGN KEY (question_id) REFERENCES questions (id) ON DELETE CASCADE
             )
         """)
-
-        print("Database initialized successfully.")
     except Exception as e:
         print(f"Error initializing database: {e}")
 
