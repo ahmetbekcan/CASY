@@ -1,5 +1,5 @@
 import streamlit as st
-from database_wrapper import DatabaseWrapper
+from database.database_wrapper import DatabaseWrapper
 
 def read_file(file_path):
     try:

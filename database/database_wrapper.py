@@ -1,7 +1,7 @@
 import sqlite3
 
 class DatabaseWrapper:
-    def __init__(self, db_url = "app_data.db"):
+    def __init__(self, db_url = "database/app_data.db"):
         self.conn = sqlite3.connect(db_url)
         self.conn.row_factory = sqlite3.Row  # Allows dictionary-style access
         self.cursor = self.conn.cursor()

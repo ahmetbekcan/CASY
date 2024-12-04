@@ -1,6 +1,6 @@
 import streamlit as st
 import ui_components
-from utils import *
+from helpers.utils import *
 from ui_components.user_role_ui import UserRole
 
 class MainUI:

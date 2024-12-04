@@ -1,7 +1,7 @@
 import streamlit as st
-from database_wrapper import DatabaseWrapper
+from database.database_wrapper import DatabaseWrapper
 from typing import Tuple
-from utils import render_logo
+from helpers.utils import render_logo
 
 class LoginUI:
     def render(self):
