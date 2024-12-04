@@ -29,7 +29,7 @@ class SurveySimulator:
         self.surveyor = Chatbot(max_tokens=350)
         self.participant = Agent(max_tokens=350)
         self.participant.set_instruct("Your goal is to answer survey questions. You should only answer the questions by using your background.\
-                                      You shouldn't ask any questions.\n" + read_file(f"tests/test_data/{agent}.txt") )
+                                      You shouldn't ask any questions.\n" + read_file(f"tests/test_data/{str.lower(agent)}.txt") )
 
     def _normalize_weights(self):
         sum = self.normal_weight + self.offtopic_weight + self.uninformative_weight
