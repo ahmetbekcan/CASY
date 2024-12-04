@@ -1,7 +1,7 @@
 import streamlit as st
-import sqlite3
+from database.database_wrapper import DatabaseWrapper
 from typing import Tuple
-from utils import render_logo
+from helpers.utils import render_logo
 
 class LoginUI:
     def render(self):
@@ -17,14 +17,14 @@ class LoginUI:
 
     def render_sign_up(self):
         st.header("Sign Up")
-        email = st.text_input("Email", key="signup_email")
+        username = st.text_input("Username", key="signup_username")
         password = st.text_input("Password", type="password", key="signup_password")
         name = st.text_input("Name", key="signup_name")
         surname = st.text_input("Surname", key="signup_surname")
         company = st.text_input("Current/Most Recent Company", key="signup_company")
 
         if st.button("Sign Up"):
-            success, message = self.sign_up_user(name, surname, company, email, password)
+            success, message = self.sign_up_user(name, surname, company, username, password)
             if success:
                 st.success(message)
             else:
@@ -32,16 +32,16 @@ class LoginUI:
 
     def render_log_in(self):
         st.header("Log In")
-        email = st.text_input("Email", key="login_email")
+        username = st.text_input("Username", key="login_username")
         password = st.text_input("Password", type="password", key="login_password")
 
         if st.button("Log In"):
-            success, message = self.log_in(email, password)
+            success, message = self.log_in(username, password)
             if success:
                 st.success(message)
-                st.write(f"Welcome back, {email}!")
+                st.write(f"Welcome back, {username}!")
                 st.session_state.logged_in = True
-                st.session_state.user_id = email
+                st.session_state.username = username
                 st.rerun()
             else:
                 st.error(message)
@@ -52,72 +52,65 @@ class LoginUI:
 
         if st.button("View Registered Users"):
             if admin_password == "casy123":
-                conn = sqlite3.connect("app_data.db")
-                c = conn.cursor()
-                c.execute("SELECT name, surname, company, email FROM users")
-                rows = c.fetchall()
-                conn.close()
-
+                db = DatabaseWrapper()
+                rows = db.fetch_all("SELECT id, name, surname, company, username FROM users")
+                db.close()
                 if rows:
                     st.subheader("Registered Users")
                     for row in rows:
-                        st.write(f"Name: {row[0]}, Surname: {row[1]}, Company: {row[2]}, Email: {row[3]}")
+                        st.write(f"ID: {row[0]}, Name: {row[1]}, Surname: {row[2]}, Company: {row[3]}, Username: {row[4]}")
                 else:
                     st.write("No registered users found.")
             else:
                 st.error("Incorrect admin password.")
 
-        if st.button("View Created Surveys"):
+        if st.button("View Created Survey Sessions"):
             if admin_password == "casy123":
-                conn = sqlite3.connect("app_data.db")
-                c = conn.cursor()
-                c.execute("SELECT survey_name, survey_code, creator_username, creation_date FROM surveys")
-                rows = c.fetchall()
-                conn.close()
+                db = DatabaseWrapper()
+                rows = db.fetch_all("SELECT session_name, session_code, creator_id, created_at FROM survey_sessions")
 
                 if rows:
-                    st.subheader("Created Surveys")
+                    st.subheader("Created Survey Sessions")
                     for row in rows:
-                        st.write(f"Survey Name: {row[0]}, Survey Code: {row[1]}, Created By: {row[2]}, Creation Date: {row[3]}")
+                        created_by = db.fetch_one("SELECT username FROM users WHERE id = ?",(row[2],))
+                        st.write(f"Session Name: {row[0]}, Session Code: {row[1]}, Created By: {created_by[0]}, Creation Date: {row[3]}")
                 else:
-                    st.write("No created survey found.")
+                    st.write("No created survey session found.")
+
+                db.close()
             else:
                 st.error("Incorrect admin password.")
 
-    def sign_up_user(self, name: str, surname: str, company: str, email: str, password: str) -> Tuple[bool, str]:
+    def sign_up_user(self, name: str, surname: str, company: str, username: str, password: str) -> Tuple[bool, str]:
         if not name or not surname:
             return False, "Name and Surname cannot be empty."
         if not company:
             return False, "Company name cannot be empty."
-        if not email:
-            return False, "Email cannot be empty."
+        if not username:
+            return False, "Username cannot be empty."
         if len(password) < 8:
             return False, "Password must be at least 8 characters long."
 
         try:
-            conn = sqlite3.connect("app_data.db")
-            c = conn.cursor()
-            c.execute("""
-                INSERT INTO users (name, surname, company, email, password)
+            db = DatabaseWrapper()
+            db.execute_query("""
+                INSERT INTO users (name, surname, company, username, password)
                 VALUES (?, ?, ?, ?, ?)
-            """, (name, surname, company, email, password))
-            conn.commit()
-            conn.close()
+            """, (name, surname, company, username, password))
+            db.close()
             return True, "Account created successfully!"
-        except sqlite3.IntegrityError:
-            return False, "Email already exists. Please use a different email."
+        except:
+            return False, "Username already exists. Please use a different username."
 
-    def log_in(self, email: str, password: str) -> Tuple[bool, str]:
-        if not email:
-            return False, "Email cannot be empty."
+    def log_in(self, username: str, password: str) -> Tuple[bool, str]:
+        if not username:
+            return False, "Username cannot be empty."
         try:
-            conn = sqlite3.connect("app_data.db")
-            c = conn.cursor()
-            c.execute("SELECT password FROM users WHERE email = ?", (email,))
-            result = c.fetchone()
-            conn.close()
+            db = DatabaseWrapper()
+            result = db.fetch_one("SELECT password FROM users WHERE username = ?", (username,))
+            db.close()
             if result is None:
-                return False, "Email does not exist. Please sign up first."
+                return False, "Username does not exist. Please sign up first."
             if result[0] != password:
                 return False, "Incorrect password. Please try again."
             return True, "Login successful!"

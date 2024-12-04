@@ -1,7 +1,7 @@
 import streamlit as st
 import ui_components
 from models.large_language_models import Chatbot
-from utils import initialize_database
+from helpers.utils import initialize_database
 
 if "chatbot" not in st.session_state:
     st.session_state.chatbot = Chatbot()

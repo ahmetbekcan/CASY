@@ -1,6 +1,6 @@
 import streamlit as st
 import ui_components
-from utils import *
+from helpers.utils import *
 from ui_components.user_role_ui import UserRole
 
 class MainUI:
@@ -58,7 +58,7 @@ class MainUI:
             st.button("Complete Survey", on_click=self.complete_survey)
             st.button('Clear Survey', on_click=self.clear_chat_history)
             st.button("Log out", on_click=self.log_out)
-            if (st.session_state.user_id == "casy"):
+            if (st.session_state.username == "casy"):
                 self.render_survey_simulation()
                 self.render_survey_evaluator()
                 self.render_developer_settings()
@@ -80,7 +80,7 @@ class MainUI:
             self.render_user_role_ui()
             return
 
-        if (not st.session_state.user_id == "casy"):
+        if (not st.session_state.username == "casy"):
             if not st.session_state.get("terms_accepted", False):
                 self.render_terms_and_conditions()
                 return

@@ -1,6 +1,6 @@
 from huggingface_hub import InferenceClient
 import os
-from utils import read_file
+from helpers.utils import read_file
 
 class Agent:
     def __init__(self, model_name=None, temperature=0.2, max_tokens=500, top_p=0.7, extra_parameters = None):

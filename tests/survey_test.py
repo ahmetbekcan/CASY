@@ -1,7 +1,7 @@
 from models.large_language_models import *
 import random
 from enum import IntEnum
-from utils import read_file
+from helpers.utils import read_file
 from dataclasses import dataclass
 import wandb
 
