@@ -1,6 +1,6 @@
 import streamlit as st
 from ui_components.user_role_ui import UserRole
-from utils import *
+from helpers.utils import *
 
 class TermsAndConditionsUI:
     def __init__(self):
