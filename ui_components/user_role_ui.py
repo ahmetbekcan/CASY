@@ -17,7 +17,6 @@ class UserRoleUI:
 
     def save_session_to_db(self, session_code):
         db = DatabaseWrapper()
-        print(st.session_state.username)
         id = db.fetch_one("SELECT id FROM users WHERE username = ?", (st.session_state.username,))
         db.execute_query("""
                 INSERT INTO survey_sessions (session_name, session_code, creator_id)
@@ -31,7 +30,7 @@ class UserRoleUI:
             survey_code = "".join(random.choices(string.ascii_uppercase + string.digits, k=8))
             try:
                 self.save_session_to_db(survey_code)
-                st.session_state["created_survey_session_code"] = survey_code
+                st.session_state.created_survey_session_code = survey_code
                 st.success(f"survey '{self.created_survey_session_name}' created successfully!")
             except:
                 st.error("A survey with this code already exists. Try again.")
@@ -41,17 +40,17 @@ class UserRoleUI:
     def render_researcher_ui(self):
         st.title("Create a survey")
 
-        if not st.session_state["created_survey_session_code"]:
+        if not st.session_state.created_survey_session_code:
             self.created_survey_session_name = st.text_input("Enter a survey name:", placeholder="e.g., MySurvey123")
             st.button("Create Survey survey", on_click=self.create_survey_session)
 
         # Show survey code and copy button if a survey is created
-        if st.session_state["created_survey_session_code"]:
+        if st.session_state.created_survey_session_code:
             st.write("### Your survey Code:")
-            st.code(st.session_state["created_survey_session_code"], language="text")
+            st.code(st.session_state.created_survey_session_code, language="text")
             st.download_button(
                 "Save as text file!",
-                data=st.session_state["created_survey_session_code"],
+                data=st.session_state.created_survey_session_code,
                 file_name="survey_code.txt",
                 mime="text/plain",
             )
@@ -61,8 +60,8 @@ class UserRoleUI:
             db = DatabaseWrapper()
             result = db.fetch_one("SELECT 1 FROM survey_sessions WHERE session_code = ?", (self.entered_survey_session_code,))
             if (result is not None):
-                st.session_state["joined_survey_session_code"] = self.entered_survey_session_code
-                st.session_state["user_role"] = UserRole.PARTICIPANT
+                st.session_state.joined_survey_session_code = self.entered_survey_session_code
+                st.session_state.user_role = UserRole.PARTICIPANT
             else:
                 st.error("Survey session code is not valid.")
         else:
@@ -72,20 +71,9 @@ class UserRoleUI:
     def render_participant_ui(self):
         st.title("Join a survey")
         self.entered_survey_session_code = st.text_input("Enter a survey code:")
-        st.button("Join Survey survey", on_click=self.join_survey)
-        if (st.session_state["user_role"] == UserRole.PARTICIPANT):
-            st.rerun()
+        st.button("Join Survey", on_click=self.join_survey)
 
     def render(self):
-        if "user_role" not in st.session_state:
-            st.session_state["user_role"] = UserRole.NONE
-            
-        if "created_survey_session_code" not in st.session_state:
-            st.session_state["created_survey_session_code"] = None
-
-        if "joined_survey_session_code" not in st.session_state:
-            st.session_state["joined_survey_session_code"] = None
-
         render_logo()
         st.title("Who are you?",)
         tab1, tab2, tab3 = st.tabs(["I am a researcher", "I am a participant", "Other"])

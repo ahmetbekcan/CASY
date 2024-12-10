@@ -4,13 +4,13 @@ from helpers.utils import *
 from ui_components.user_role_ui import UserRole
 
 class MainUI:
-    def __init__(self, chatbot):
-        self.chatbot = chatbot
+    def __init__(self):
+        self.chatbot = st.session_state.chatbot
 
     def clear_chat_history(self):
         st.session_state.messages = []
-        with st.chat_message("assistant"):
-            st.session_state.initial_message = st.write_stream(st.session_state.chatbot.ask_model([{"role": "user", "content": "Hi!"}]))
+        # with st.chat_message("assistant"):
+        #     st.session_state.initial_message = st.write_stream(st.session_state.chatbot.ask_model([{"role": "user", "content": "Hi!"}]))
 
     def complete_survey(self):
         st.session_state.messages.append({"role": "user", "content": "End the survey. Don't ask any further questions."})
@@ -26,7 +26,7 @@ class MainUI:
         ui_terms_conditions.render()
 
     def render_survey_simulation(self):
-        ui_survey_simulation = ui_components.SurveySimulationUI(self.chatbot)
+        ui_survey_simulation = ui_components.SurveySimulationUI()
         ui_survey_simulation.render()
 
     def render_survey_evaluator(self):
@@ -34,11 +34,11 @@ class MainUI:
         ui_survey_evaluator.render()
 
     def render_developer_settings(self):
-        ui_dev_settings = ui_components.DeveloperSettingsUI(self.chatbot)
+        ui_dev_settings = ui_components.DeveloperSettingsUI()
         ui_dev_settings.render()
 
     def render_chat_ui(self):
-        ui_chat = ui_components.ChatUI(self.chatbot)
+        ui_chat = ui_components.ChatUI()
         ui_chat.render()
 
     def render_login_ui(self):
@@ -50,8 +50,8 @@ class MainUI:
         user_role_ui.render()
 
     def render_survey_ui(self):
-        if "messages" not in st.session_state:
-            self.clear_chat_history()
+        # if st.session_state.messages == []:
+        #     self.clear_chat_history()
         
         # Left side
         with st.sidebar:
@@ -68,22 +68,21 @@ class MainUI:
     
     def render(self):
 
-        if not st.session_state.get("css", None):
+        if (st.session_state.css == None):
             st.session_state.css = read_file("ui_components/styles.css")
         st.markdown(f"<style>{st.session_state.css}</style>", unsafe_allow_html=True) #Global app style can be set here
 
-        if not st.session_state.get("logged_in", False):
+        if not st.session_state.logged_in:
             self.render_login_ui()
             return
 
-        if (st.session_state.get("user_role", UserRole.NONE) == UserRole.NONE):
+        if (st.session_state.user_role == UserRole.NONE):
             self.render_user_role_ui()
             return
 
-        if (not st.session_state.username == "casy"):
-            if not st.session_state.get("terms_accepted", False):
-                self.render_terms_and_conditions()
-                return
+        if not st.session_state.terms_accepted:
+            self.render_terms_and_conditions()
+            return
 
         self.render_survey_ui()
         

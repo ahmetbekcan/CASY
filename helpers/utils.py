@@ -43,7 +43,7 @@ def initialize_database():
         db.execute_query("""
             CREATE TABLE IF NOT EXISTS surveys (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                sesion_id INTEGER NOT NULL,
+                session_id INTEGER NOT NULL,
                 participant_id INTEGER NOT NULL, 
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 is_completed BOOLEAN DEFAULT FALSE,
