@@ -35,7 +35,8 @@ Check out the configuration reference at [Hugging Face Spaces Config](https://hu
 
 - **Interactive Chatbot**: Conversational survey experience for users.  
 - **Cloud Integration**: All data is securely stored in Google Cloud Firestore.  
-- **Dynamic Insights**: Collects responses to analyze technical challenges.  
+- **Dynamic Insights**: Collects responses to analyze technical challenges.
+- **Dynamic Question Flow**: Adapts follow-up questions based on user responses to gather comprehensive data.  
 - **Adversarial Resistance**: Maintains survey focus with up to 70% success rate.  
 
 ## 💻 Requirements
