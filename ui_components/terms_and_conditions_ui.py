@@ -30,6 +30,7 @@ class TermsAndConditionsUI:
                 if submitted:
                     if terms_accepted:
                         st.session_state.terms_accepted = True
+                        log_survey()
                         st.rerun()
                     else:
                         st.warning('Please accept the terms and conditions to proceed to the survey!', icon="⚠️")

@@ -36,6 +36,36 @@ class UserRoleUI:
                 st.error("A survey with this code already exists. Try again.")
         else:
             st.error("Please enter a survey name before creating a survey.")
+    
+    def display_survey_details(self,survey_id):
+        db = DatabaseWrapper()
+        
+        survey_details = db.fetch_all("""
+                                        SELECT 
+                                            users.name AS participant_name,
+                                            users.surname AS participant_surname,
+                                            users.company AS participant_company,
+                                            questions.question_text,
+                                            responses.response_text
+                                        FROM surveys
+                                        JOIN survey_sessions ON surveys.session_id = survey_sessions.id
+                                        JOIN users ON surveys.participant_id = users.id
+                                        JOIN questions ON surveys.id = questions.survey_id
+                                        JOIN responses ON questions.id = responses.question_id
+                                        WHERE surveys.id = ?;
+                                    """, (survey_id,))
+        db.close()
+
+        if survey_details:
+            st.write(f"Participant: {survey_details[0]['participant_name']} {survey_details[0]['participant_surname']}")
+            st.write(f"Company: {survey_details[0]['participant_company']}")
+            
+            st.write("### Survey Questions and Answers:")
+            for detail in survey_details:
+                st.write(f"**Question:** {detail['question_text']}")
+                st.write(f"**Answer:** {detail['response_text']}")
+        else:
+            st.write("No details found for this survey.")
 
     def render_researcher_ui(self):
         st.title("Create a survey")
@@ -55,11 +85,40 @@ class UserRoleUI:
                 mime="text/plain",
             )
 
+        completed_surveys = get_completed_surveys()
+        if completed_surveys:
+        # List all completed surveys with a clickable link
+            for survey in completed_surveys:
+                with st.expander(f"Name: {survey['session_name']} - Session Code: {survey['session_code']}"):
+                    st.write(f"Completed At: {survey['created_at']}")
+                    # Clicking on a survey will trigger showing the details
+                    if st.button(f"View Details for Survey ID {survey['survey_id']}"):
+                        self.display_survey_details(survey['survey_id'])
+        else:
+            st.write("No completed surveys found.")
+
     def join_survey(self):
         if (self.entered_survey_session_code):
             db = DatabaseWrapper()
             result = db.fetch_one("SELECT 1 FROM survey_sessions WHERE session_code = ?", (self.entered_survey_session_code,))
+            db.close()
             if (result is not None):
+                db = DatabaseWrapper()
+                is_completed_before = db.fetch_one("""
+                                                    SELECT 1
+                                                    FROM surveys
+                                                    JOIN survey_sessions ON surveys.session_id = survey_sessions.id
+                                                    JOIN users ON surveys.participant_id = users.id
+                                                    WHERE users.username = ? 
+                                                    AND survey_sessions.session_code = ? 
+                                                    AND surveys.is_completed = TRUE
+                                                    LIMIT 1;
+                                                """, (st.session_state.username, self.entered_survey_session_code))
+                db.close()
+                if (is_completed_before):
+                    st.error("You have already completed this survey!")
+                    return
+
                 st.session_state.joined_survey_session_code = self.entered_survey_session_code
                 st.session_state.user_role = UserRole.PARTICIPANT
             else:

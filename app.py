@@ -39,6 +39,16 @@ if ("messages" not in st.session_state):
 if ("initial_message" not in st.session_state):
     st.session_state.initial_message = None
 
+# CACHED DATABASE QUERIES
+if ("current_survey_id" not in st.session_state):
+    st.session_state.cached_survey_id = None
+
+if ("current_participant_id" not in st.session_state):
+    st.session_state.cached_participant_id = None
+
+if ("current_survey_session_id" not in st.session_state):
+    st.session_state.cached_survey_session_id = None
+
 initialize_database()
 
 app_ui = ui_components.MainUI()

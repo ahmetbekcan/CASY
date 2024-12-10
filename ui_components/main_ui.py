@@ -9,17 +9,27 @@ class MainUI:
 
     def clear_chat_history(self):
         st.session_state.messages = []
-        # with st.chat_message("assistant"):
-        #     st.session_state.initial_message = st.write_stream(st.session_state.chatbot.ask_model([{"role": "user", "content": "Hi!"}]))
 
     def complete_survey(self):
-        st.session_state.messages.append({"role": "user", "content": "End the survey. Don't ask any further questions."})
-        res = ''.join(st.session_state.chatbot.ask_model(st.session_state.messages))
-        st.session_state.messages.append({"role": "assistant", "content": res})
         st.session_state.survey_completed = True
-    
+        db = DatabaseWrapper()
+        db.execute_query("""
+                            UPDATE surveys
+                            SET is_completed = TRUE
+                            WHERE id = ?;
+                        """, (st.session_state.cached_survey_id,))
+        print(f"Comlete survey survey id = {st.session_state.cached_survey_id}")
+        db.close()
+        clear_cached_values()
+        
     def log_out(self):
         st.session_state.clear()
+    
+    def go_to_main_page(self):
+        temp_username = st.session_state.username
+        st.session_state.clear()
+        st.session_state.username = temp_username
+        st.session_state.logged_in = True
 
     def render_terms_and_conditions(self):
         ui_terms_conditions = ui_components.TermsAndConditionsUI()
@@ -50,9 +60,6 @@ class MainUI:
         user_role_ui.render()
 
     def render_survey_ui(self):
-        # if st.session_state.messages == []:
-        #     self.clear_chat_history()
-        
         # Left side
         with st.sidebar:
             st.button("Complete Survey", on_click=self.complete_survey)
@@ -65,7 +72,15 @@ class MainUI:
 
         # Chat in the right side
         self.render_chat_ui()
-    
+            
+    def render_completion_ui(self):
+        render_logo()
+        st.title("Thanks for your participation!")
+        left_co, cent_co,last_co = st.columns(3)
+        with cent_co:
+            st.button("Main Page", on_click=self.go_to_main_page)
+            st.button("Log out", on_click=self.log_out)
+
     def render(self):
 
         if (st.session_state.css == None):
@@ -75,14 +90,18 @@ class MainUI:
         if not st.session_state.logged_in:
             self.render_login_ui()
             return
-
+        
         if (st.session_state.user_role == UserRole.NONE):
             self.render_user_role_ui()
             return
-
+        
         if not st.session_state.terms_accepted:
             self.render_terms_and_conditions()
             return
-
+        
+        if (st.session_state.survey_completed):
+            self.render_completion_ui()
+            return
+        
         self.render_survey_ui()
         
