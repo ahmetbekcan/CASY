@@ -18,7 +18,6 @@ class MainUI:
                             SET is_completed = TRUE
                             WHERE id = ?;
                         """, (st.session_state.cached_survey_id,))
-        print(f"Comlete survey survey id = {st.session_state.cached_survey_id}")
         db.close()
         clear_cached_values()
         

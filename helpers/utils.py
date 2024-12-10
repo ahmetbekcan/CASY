@@ -82,7 +82,6 @@ def log_chat_input():
     message = st.session_state.messages[-1]["content"]
     get_current_survey_id()
     if (st.session_state.cached_survey_id == None):
-        print("No matching survey_id could be found")
         return
     
     db = DatabaseWrapper()
@@ -92,7 +91,6 @@ def log_chat_input():
                         INSERT INTO questions (survey_id, question_text) 
                         VALUES (?, ?);
                         """, (st.session_state.cached_survey_id, message))
-        print(f"inserted into questions with survey id: {st.session_state.cached_survey_id} and message: {message}")
     elif (role == "user"):
         question_id = db.fetch_one("""
                         SELECT id AS question_id
@@ -106,9 +104,6 @@ def log_chat_input():
                             INSERT INTO responses (question_id, response_text)
                             VALUES (?, ?);
                             """, (question_id[0], message))
-            print(f"inserted into responses with survey id: {st.session_state.cached_survey_id} and message: {message}")
-        else:
-            print("No questions found for the given survey_id.")
 
     db.close()
 
@@ -159,7 +154,6 @@ def log_survey():
                 INSERT INTO surveys (session_id, participant_id) 
                 VALUES (?, ?);
                 """, (st.session_state.cached_survey_session_id, st.session_state.cached_participant_id))
-    print(f"Inserted into surveys where session_id: {st.session_state.cached_survey_session_id} participant id: {st.session_state.cached_participant_id} ")
     db.close()
 
 def get_completed_surveys():
