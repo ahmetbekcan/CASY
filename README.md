@@ -39,11 +39,10 @@ Check out the configuration reference at [Hugging Face Spaces Config](https://hu
 - **Python 3.x**  
 - Required libraries listed in `requirements.txt`  
 
-Install dependencies using:
-
-pip install -r requirements.txt
 
 ## 🚀 How to Run the Project
+
+Install dependencies and run the app using the following commands:
 
 1. Install the required libraries:  
    pip install -r requirements.txt  
