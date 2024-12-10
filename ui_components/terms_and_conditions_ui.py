@@ -5,7 +5,7 @@ from helpers.utils import *
 class TermsAndConditionsUI:
     def __init__(self):
         # Store the acceptance state in session state for persistence
-        self.terms_accepted = st.session_state.get("terms_accepted", False)
+        self.terms_accepted = st.session_state.terms_accepted
 
     def render(self):
         # If the user has accepted the terms, don't show the form
@@ -30,11 +30,12 @@ class TermsAndConditionsUI:
                 if submitted:
                     if terms_accepted:
                         st.session_state.terms_accepted = True
+                        log_survey()
                         st.rerun()
                     else:
                         st.warning('Please accept the terms and conditions to proceed to the survey!', icon="⚠️")
             
             if (st.button("Cancel Survey")):
-                st.session_state["joined_survey_code"] = None
+                st.session_state.joined_survey_session_code = None
                 st.session_state.user_role = UserRole.NONE
                 st.rerun()

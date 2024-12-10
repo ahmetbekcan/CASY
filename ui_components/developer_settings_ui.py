@@ -1,9 +1,9 @@
 import streamlit as st
 
 class DeveloperSettingsUI:
-    def __init__(self, chatbot):
+    def __init__(self):
         # Initialize the class with the chatbot instance to interact with session state
-        self.chatbot = chatbot
+        self.chatbot = st.session_state.chatbot
 
     def render(self):
         with st.sidebar:

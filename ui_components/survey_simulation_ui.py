@@ -2,12 +2,12 @@ import streamlit as st
 from tests.survey_test import *
 
 class SurveySimulationUI:
-    def __init__(self, chatbot):
+    def __init__(self):
         self.no_of_questions = 5
         self.rate_of_normal = 0.8
         self.rate_of_offtopic = 0.1
         self.rate_of_uninformative = 0.1
-        self.chatbot = chatbot
+        self.chatbot = st.session_state.chatbot
         self.agent = "Alex"
         self.log_data = False
     def render(self):
