@@ -15,6 +15,10 @@ Check out the configuration reference at [Hugging Face Spaces Config](https://hu
 
 # 🏆 CASY - Chatbot Survey Tool
 
+<p align="center">
+  <img src="logo.png" alt="CASY Logo" width="150"/>
+</p>
+
 **CASY** is a chatbot-based survey tool designed to collect insights from technical professionals like data scientists, software developers, and LLM developers. It focuses on gathering survey responses to identify and analyze technical challenges in software development projects.
 
 ## 📋 Project Overview
