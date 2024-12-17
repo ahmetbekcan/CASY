@@ -87,15 +87,12 @@ class UserRoleUI:
 
         completed_surveys = get_completed_surveys()
         if completed_surveys:
-        # List all completed surveys with a clickable link
+            st.title("Completed surveys")
             for survey in completed_surveys:
                 with st.expander(f"Name: {survey['session_name']} - Session Code: {survey['session_code']}"):
                     st.write(f"Completed At: {survey['created_at']}")
-                    # Clicking on a survey will trigger showing the details
                     if st.button(f"View Details for Survey ID {survey['survey_id']}"):
                         self.display_survey_details(survey['survey_id'])
-        else:
-            st.write("No completed surveys found.")
 
     def join_survey(self):
         if (self.entered_survey_session_code):
