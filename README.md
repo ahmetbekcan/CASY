@@ -51,8 +51,9 @@ Install dependencies and run the app using the following commands:
 
 1. Install the required libraries:  
    pip install -r requirements.txt
-
-2. Run the app:  
+2. Create an access token in Hugging Face.
+3. Authenitcate with Hugging Face using "huggingface-cli login" command, and enter your Hugging Face token.
+4. Run the app:  
    streamlit run app.py
 
 ## 📜 License
