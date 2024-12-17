@@ -42,7 +42,7 @@ Install dependencies and run the app using the following commands:
 6. Run the app:  
    streamlit run app.py
 
-## Core Features
+## 🧩 Core Features
 ### **Create a survey session**
 ![msedge_eW7cbZiyeE](https://github.com/user-attachments/assets/e57de93b-bcbc-46bc-a547-e9647a12bdaf)
 
@@ -55,7 +55,7 @@ Install dependencies and run the app using the following commands:
 ### **View details of completed survey sessions**
 ![msedge_nP6GRiqCU8](https://github.com/user-attachments/assets/3148378b-61c7-44b7-83a0-f455caa98f00)
 
-## **Developer Features**
+## 🛠️ Developer Features
 ❗**Your username should be "casy" to be able to view these features** ❗
 
 ### Simulate a survey
