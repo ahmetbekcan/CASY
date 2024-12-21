@@ -9,6 +9,15 @@ class MainUI:
 
     def clear_chat_history(self):
         st.session_state.messages = []
+        db = DatabaseWrapper()
+        db.execute_query("""
+                            DELETE FROM responses WHERE question_id IN (
+                                SELECT id FROM questions WHERE survey_id = ?
+                            );
+                        """, (st.session_state.cached_survey_id,))
+        
+        db.execute_query("DELETE FROM questions WHERE survey_id = ?;", (st.session_state.cached_survey_id,))
+        db.close()
 
     def complete_survey(self):
         st.session_state.survey_completed = True
