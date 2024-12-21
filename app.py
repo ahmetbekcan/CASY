@@ -3,7 +3,13 @@ import ui_components
 from models.large_language_models import Chatbot
 from helpers.utils import initialize_database
 from ui_components.user_role_ui import UserRole
+from version import __version__
 
+st.set_page_config(
+    menu_items={
+        'about': f'**CASY {__version__}**'
+    }
+)
 # INITIALIZE SESSION STATE VARIABLES HERE
 
 if ("chatbot" not in st.session_state):
