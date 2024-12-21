@@ -8,7 +8,8 @@ from enum import Enum
 class UserRole(Enum):
     NONE = 1,
     RESEARCHER = 2,
-    PARTICIPANT = 3
+    PARTICIPANT = 3,
+    TRIAL = 4
 
 class UserRoleUI:
     def __init__(self):
@@ -141,7 +142,7 @@ class UserRoleUI:
 
     def render_participant_ui(self):
         st.title("Join a survey")
-        self.entered_survey_session_code = st.text_input("Enter a survey code:")
+        self.entered_survey_session_code = st.text_input("Enter a survey code:", placeholder="e.g, A4HTE07H")
         if (st.button("Join Survey")):
             self.join_survey()
             st.rerun()
