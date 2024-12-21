@@ -19,7 +19,6 @@
 ## 🛠️ Features
 
 - **Interactive Chatbot**: Conversational survey experience for users.  
-- **Cloud Integration**: All data is securely stored in Google Cloud MySQL.  
 - **Dynamic Insights**: Collects responses to analyze technical challenges.
 - **Dynamic Question Flow**: Adapts follow-up questions based on user responses to gather comprehensive data.  
 - **Adversarial Resistance**: Maintains survey focus with up to 90% success rate.  
@@ -34,12 +33,11 @@
 
 Install dependencies and run the app using the following commands:
 1. Clone the project.
-2. Delete available database from "Database/app_data.db" for testing purposes.
-3. Install the required libraries:  
+2. Install the required libraries:  
    pip install -r requirements.txt
-4. Create an access token in Hugging Face.
-5. Authenitcate with Hugging Face using "huggingface-cli login" command, and enter your Hugging Face token.
-6. Run the app:  
+3. Create an access token in Hugging Face.
+4. Authenitcate with Hugging Face using "huggingface-cli login" command, and enter your Hugging Face token.
+5. Run the app:  
    streamlit run app.py
 
 ## 🧩 Core Features
@@ -55,8 +53,14 @@ Install dependencies and run the app using the following commands:
 ### **View details of completed survey sessions**
 ![msedge_nP6GRiqCU8](https://github.com/user-attachments/assets/3148378b-61c7-44b7-83a0-f455caa98f00)
 
-## 🛠️ Developer Features
-❗**Your username should be "casy" to be able to view these features** ❗
+### **Resume surveys from where you left off**
+![explorer_9LPqjuXiZW](https://github.com/user-attachments/assets/97261457-9b12-41c2-8d31-4dc144b88427)
+
+
+## 🛠️ Trial Features
+### Try CASY right away!
+
+![explorer_P8kOl9Ciuf](https://github.com/user-attachments/assets/18501fde-9755-4e49-837e-ff5ff99a4909)
 
 ### Simulate a survey
 Due to the nature of our application, it is not possible to create a testing environment using predefined question-answer pairs to measure the chatbot's accuracy. Therefore, we developed a simulation environment that allows us to evaluate the chatbot's performance by generating survey participant agents using real data from technical debt surveys.
@@ -67,11 +71,11 @@ In this environment, you can select a participant profile and specify the number
 
 Further details about the implementation can be found in tests/survey_test.py.
 
-![msedge_7HzFBThmt9](https://github.com/user-attachments/assets/0d23df2b-e754-4a7a-8025-e85a3abfdc8b)
+![msedge_9ZFWTTueS2](https://github.com/user-attachments/assets/f341dadc-d54d-474c-8ac1-4f8d949d2d77)
 
 ### Change chatbot parameters
 
-![msedge_vukdAdCwqU](https://github.com/user-attachments/assets/d001beb7-a615-48c5-8f50-ac068c4d6e4a)
+![msedge_5CYtTrj16D](https://github.com/user-attachments/assets/174bbfb9-0c55-4747-94d8-0ebedb6f0abc)
 
 ## 📜 License
 This project is licensed under the **MIT License**.
