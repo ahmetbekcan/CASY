@@ -67,7 +67,7 @@ class LoginUI:
         if st.button("View Created Survey Sessions"):
             if admin_password == "casy123":
                 db = DatabaseWrapper()
-                rows = db.fetch_all("SELECT session_name, session_code, creator_id, created_at FROM survey_sessions")
+                rows = db.fetch_all("SELECT session_name, session_code, creator_id, datetime(created_at, 'localtime') FROM survey_sessions")
 
                 if rows:
                     st.subheader("Created Survey Sessions")

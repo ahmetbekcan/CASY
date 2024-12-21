@@ -57,8 +57,8 @@ class UserRoleUI:
         db.close()
 
         if survey_details:
-            st.write(f"Participant: {survey_details[0]['participant_name']} {survey_details[0]['participant_surname']}")
-            st.write(f"Company: {survey_details[0]['participant_company']}")
+            st.write(f"**Participant**: {survey_details[0]['participant_name']} {survey_details[0]['participant_surname']}")
+            st.write(f"**Company**: {survey_details[0]['participant_company']}")
             
             st.write("### Survey Questions and Answers:")
             for detail in survey_details:
@@ -90,7 +90,7 @@ class UserRoleUI:
             st.title("Completed surveys")
             for survey in completed_surveys:
                 with st.expander(f"Name: {survey['session_name']} - Session Code: {survey['session_code']}"):
-                    st.write(f"Completed At: {survey['created_at']}")
+                    st.write(f"Completed At: {survey['created_at_local']}")
                     if st.button(f"View Details for Survey ID {survey['survey_id']}"):
                         self.display_survey_details(survey['survey_id'])
 
@@ -115,19 +115,45 @@ class UserRoleUI:
                 if (is_completed_before):
                     st.error("You have already completed this survey!")
                     return
-
-                st.session_state.joined_survey_session_code = self.entered_survey_session_code
-                st.session_state.user_role = UserRole.PARTICIPANT
+                db2 = DatabaseWrapper()
+                is_joined_before = db2.fetch_one("""
+                                                    SELECT 1
+                                                    FROM surveys
+                                                    JOIN survey_sessions ON surveys.session_id = survey_sessions.id
+                                                    JOIN users ON surveys.participant_id = users.id
+                                                    WHERE users.username = ? 
+                                                    AND survey_sessions.session_code = ? 
+                                                    AND surveys.is_completed = FALSE
+                                                    LIMIT 1;
+                                                """, (st.session_state.username, self.entered_survey_session_code))
+                db2.close()
+                self.join_survey_with_code(self.entered_survey_session_code, is_joined_before)
             else:
                 st.error("Survey session code is not valid.")
         else:
             st.error("Please enter a survey code to join a survey.")
             return False
-        
+
+    def join_survey_with_code(self, code, terms_accepted = False):
+        st.session_state.joined_survey_session_code = code
+        st.session_state.user_role = UserRole.PARTICIPANT
+        st.session_state.terms_accepted = terms_accepted
+
     def render_participant_ui(self):
         st.title("Join a survey")
         self.entered_survey_session_code = st.text_input("Enter a survey code:")
-        st.button("Join Survey", on_click=self.join_survey)
+        if (st.button("Join Survey")):
+            self.join_survey()
+            st.rerun()
+
+        uncompleted_surveys = get_uncompleted_surveys()
+        if uncompleted_surveys:
+            st.title("Continue your survey")
+            for survey in uncompleted_surveys:
+                with st.expander(f"Name: {survey['session_name']} - Session Code: {survey['session_code']}"):
+                    if st.button(f"Continue Survey {survey['survey_id']}"):
+                        self.join_survey_with_code(survey['session_code'], terms_accepted=True)
+                        st.rerun()
 
     def render(self):
         render_logo()

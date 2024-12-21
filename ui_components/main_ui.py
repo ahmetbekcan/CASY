@@ -9,6 +9,7 @@ class MainUI:
 
     def clear_chat_history(self):
         st.session_state.messages = []
+        get_current_survey_id()
         db = DatabaseWrapper()
         db.execute_query("""
                             DELETE FROM responses WHERE question_id IN (
@@ -21,6 +22,7 @@ class MainUI:
 
     def complete_survey(self):
         st.session_state.survey_completed = True
+        get_current_survey_id()
         db = DatabaseWrapper()
         db.execute_query("""
                             UPDATE surveys
