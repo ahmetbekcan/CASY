@@ -29,6 +29,7 @@ class MainUI:
                         """, (st.session_state.cached_survey_id,))
         db.close()
         clear_cached_values()
+        st.session_state.joined_survey_session_code = None
         
     def log_out(self):
         st.session_state.clear()
