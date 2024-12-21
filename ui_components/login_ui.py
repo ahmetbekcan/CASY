@@ -2,18 +2,19 @@ import streamlit as st
 from database.database_wrapper import DatabaseWrapper
 from typing import Tuple
 from helpers.utils import render_logo
+from ui_components.user_role_ui import UserRole
 
 class LoginUI:
     def render(self):
         render_logo()
         st.title("Welcome to CASY!")
-        tab1, tab2, tab3 = st.tabs(["Log In", "Sign Up", "Admin View"])
+        tab1, tab2, tab3 = st.tabs(["Log In", "Sign Up", "Trial"])
         with tab1:
             self.render_log_in()
         with tab2:
             self.render_sign_up()
         with tab3:
-            self.render_admin_view()
+            self.render_trial_view()
 
     def render_sign_up(self):
         st.header("Sign Up")
@@ -46,40 +47,45 @@ class LoginUI:
             else:
                 st.error(message)
 
-    def render_admin_view(self):
-        st.header("Admin View")
-        admin_password = st.text_input("Enter Admin Password", type="password", key="admin_password")
+    def render_trial_view(self):
+        #admin_password = st.text_input("Enter Admin Password", type="password", key="admin_password")
 
-        if st.button("View Registered Users"):
-            if admin_password == "casy123":
-                db = DatabaseWrapper()
-                rows = db.fetch_all("SELECT id, name, surname, company, username FROM users")
-                db.close()
-                if rows:
-                    st.subheader("Registered Users")
-                    for row in rows:
-                        st.write(f"ID: {row[0]}, Name: {row[1]}, Surname: {row[2]}, Company: {row[3]}, Username: {row[4]}")
-                else:
-                    st.write("No registered users found.")
-            else:
-                st.error("Incorrect admin password.")
+        if st.button("Try now!"):
+            #if admin_password == "casy123":
+            st.session_state.user_role = UserRole.TRIAL
+            st.rerun()
 
-        if st.button("View Created Survey Sessions"):
-            if admin_password == "casy123":
-                db = DatabaseWrapper()
-                rows = db.fetch_all("SELECT session_name, session_code, creator_id, datetime(created_at, 'localtime') FROM survey_sessions")
 
-                if rows:
-                    st.subheader("Created Survey Sessions")
-                    for row in rows:
-                        created_by = db.fetch_one("SELECT username FROM users WHERE id = ?",(row[2],))
-                        st.write(f"Session Name: {row[0]}, Session Code: {row[1]}, Created By: {created_by[0]}, Creation Date: {row[3]}")
-                else:
-                    st.write("No created survey session found.")
+        # if st.button("View Registered Users"):
+        #     if admin_password == "casy123":
+        #         db = DatabaseWrapper()
+        #         rows = db.fetch_all("SELECT id, name, surname, company, username FROM users")
+        #         db.close()
+        #         if rows:
+        #             st.subheader("Registered Users")
+        #             for row in rows:
+        #                 st.write(f"ID: {row[0]}, Name: {row[1]}, Surname: {row[2]}, Company: {row[3]}, Username: {row[4]}")
+        #         else:
+        #             st.write("No registered users found.")
+        #     else:
+        #         st.error("Incorrect admin password.")
 
-                db.close()
-            else:
-                st.error("Incorrect admin password.")
+        # if st.button("View Created Survey Sessions"):
+        #     if admin_password == "casy123":
+        #         db = DatabaseWrapper()
+        #         rows = db.fetch_all("SELECT session_name, session_code, creator_id, datetime(created_at, 'localtime') FROM survey_sessions")
+
+        #         if rows:
+        #             st.subheader("Created Survey Sessions")
+        #             for row in rows:
+        #                 created_by = db.fetch_one("SELECT username FROM users WHERE id = ?",(row[2],))
+        #                 st.write(f"Session Name: {row[0]}, Session Code: {row[1]}, Created By: {created_by[0]}, Creation Date: {row[3]}")
+        #         else:
+        #             st.write("No created survey session found.")
+
+        #         db.close()
+        #     else:
+        #         st.error("Incorrect admin password.")
 
     def sign_up_user(self, name: str, surname: str, company: str, username: str, password: str) -> Tuple[bool, str]:
         if not name or not surname:

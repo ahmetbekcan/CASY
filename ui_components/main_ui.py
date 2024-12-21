@@ -73,13 +73,15 @@ class MainUI:
     def render_survey_ui(self):
         # Left side
         with st.sidebar:
-            st.button("Complete Survey", on_click=self.complete_survey)
-            st.button('Clear Survey', on_click=self.clear_chat_history)
-            st.button("Log out", on_click=self.log_out)
-            if (st.session_state.username == "casy"):
+            if (st.session_state.user_role == UserRole.PARTICIPANT):
+                st.button("Complete Survey", on_click=self.complete_survey)
+                st.button('Clear Survey', on_click=self.clear_chat_history)
+                st.button("Log out", on_click=self.log_out)
+            if (st.session_state.user_role == UserRole.TRIAL):
                 self.render_survey_simulation()
                 self.render_survey_evaluator()
                 self.render_developer_settings()
+                st.button("Finish Trial", on_click=self.log_out)
 
         # Chat in the right side
         self.render_chat_ui()
@@ -97,7 +99,11 @@ class MainUI:
         if (st.session_state.css == None):
             st.session_state.css = read_file("ui_components/styles.css")
         st.markdown(f"<style>{st.session_state.css}</style>", unsafe_allow_html=True) #Global app style can be set here
-
+        
+        if (st.session_state.user_role == UserRole.TRIAL):
+            self.render_survey_ui()
+            return
+        
         if not st.session_state.logged_in:
             self.render_login_ui()
             return
