@@ -7,8 +7,10 @@ from version import __version__
 
 st.set_page_config(
     menu_items={
-        'about': f'**CASY {__version__}**'
-    }
+        'about': f'**CASY {__version__}**',
+    },
+    page_title="CASY - Survey Chatbot",
+    page_icon="ui_components/logo.PNG"
 )
 # INITIALIZE SESSION STATE VARIABLES HERE
 
