@@ -18,10 +18,35 @@ class TermsAndConditionsUI:
                     st.write("""
                     **Terms and Conditions**
 
-                    1. Your data will be used in accordance with our policies.
-                    2. You agree not to misuse the service.
-                    3. Any violations may lead to account suspension.
-                    4. For more information, please refer to our policy guidelines.
+                    1. Data Controller
+                    This information text is prepared in accordance with the Personal Data Protection Law No. 6698
+                    ("KVKK"). Your personal data is processed by CASY/METU within the scope described below.
+                    2. Purpose of Processing Personal Data
+                    Your personal data, including but not limited to name, email address, and survey responses, is
+                    collected and processed for the following purposes:
+                    • Conducting chatbot-based surveys,
+                    • Gathering insights on technical challenges,
+                    • Improving and analyzing chatbot performance,
+                    • Ensuring secure and effective use of the chatbot service.
+                    3. Legal Basis and Method of Data Collection
+                    Personal data is collected electronically via the chatbot platform based on the legal grounds of
+                    explicit consent (Article 5/1 of KVKK) and/or the legitimate interest of the data controller
+                    (Article 5/2-f).
+                    4. Data Sharing
+                    Your personal data will not be shared with third parties without your explicit consent, except
+                    where legally required or within the scope of collaborations for academic and research purposes.
+                    5. Storage and Security
+                    Your data will be securely stored in Google Cloud for the duration necessary to achieve the
+                    stated purposes. Appropriate technical and organizational measures are taken to protect your
+                    personal data against unauthorized access.
+                    6. Rights of Data Subjects
+                    Under KVKK, you have the right to:
+                    • Learn whether your data is being processed,
+                    • Request information regarding the processing,
+                    • Access your data and request corrections,
+                    • Request the deletion/destruction of your data,
+                    • Object to the processing or request limitation,
+                    • Lodge a complaint with the Personal Data Protection Authority.
                     """)
 
                 terms_accepted = st.checkbox("I have read and accepted the terms and conditions.")
