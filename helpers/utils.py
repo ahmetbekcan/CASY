@@ -129,7 +129,7 @@ def get_current_survey_id():
         st.session_state.cached_survey_id = survey_id[0]
 
 def get_participant_and_session_id():
-    if (st.session_state.cached_participant_id and st.session_state.cached_survey_session_id):
+    if (st.session_state.cached_user_id and st.session_state.cached_survey_session_id):
         return
     db = DatabaseWrapper()
     
@@ -141,26 +141,26 @@ def get_participant_and_session_id():
             """, (st.session_state.joined_survey_session_code, st.session_state.username))
     
     if (result):
-        st.session_state.cached_participant_id, st.session_state.cached_survey_session_id = result
+        st.session_state.cached_user_id, st.session_state.cached_survey_session_id = result
     db.close()
 
 def log_survey():
     get_participant_and_session_id()
-    if (not st.session_state.cached_participant_id and not st.session_state.cached_survey_session_id):
+    if (not st.session_state.cached_user_id and not st.session_state.cached_survey_session_id):
         return
     
     db = DatabaseWrapper()
     db.execute_query("""
                 INSERT INTO surveys (session_id, participant_id) 
                 VALUES (?, ?);
-                """, (st.session_state.cached_survey_session_id, st.session_state.cached_participant_id))
+                """, (st.session_state.cached_survey_session_id, st.session_state.cached_user_id))
     db.close()
 
 def get_completed_surveys():
     db = DatabaseWrapper()
     
     completed_surveys = db.fetch_all("""
-                                        SELECT surveys.id AS survey_id, survey_sessions.session_name, survey_sessions.session_code, surveys.created_at
+                                        SELECT surveys.id AS survey_id, survey_sessions.session_name, survey_sessions.session_code, datetime(surveys.created_at, 'localtime') AS created_at_local
                                         FROM surveys
                                         JOIN survey_sessions ON surveys.session_id = survey_sessions.id
                                         WHERE survey_sessions.creator_id = (SELECT id FROM users WHERE username = ?)
@@ -170,7 +170,21 @@ def get_completed_surveys():
     
     return completed_surveys
 
+def get_uncompleted_surveys():
+    db = DatabaseWrapper()
+    
+    uncompleted_surveys = db.fetch_all("""
+                                        SELECT surveys.id AS survey_id, survey_sessions.session_name, survey_sessions.session_code
+                                        FROM surveys
+                                        JOIN survey_sessions ON surveys.session_id = survey_sessions.id
+                                        WHERE surveys.participant_id = (SELECT id FROM users WHERE username = ?)
+                                        AND surveys.is_completed = FALSE;
+                                    """, (st.session_state.username,))
+    db.close()
+    
+    return uncompleted_surveys
+
 def clear_cached_values():
     st.session_state.cached_survey_session_id = None
-    st.session_state.cached_participant_id = None
+    st.session_state.cached_user_id = None
     st.session_state.cached_survey_id = None
