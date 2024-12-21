@@ -5,7 +5,7 @@ from helpers.utils import read_file
 class Agent:
     def __init__(self, model_name=None, temperature=0.2, max_tokens=500, top_p=0.7, extra_parameters = None):
         self.model_name = model_name or os.getenv('MODEL_NAME') or "meta-llama/Llama-3.2-3B-Instruct"
-        self.client = InferenceClient()
+        self.client = InferenceClient(token=os.getenv("HUGGINGFACE_TOKEN"))
         self.temperature = temperature
         self.max_tokens = max_tokens
         self.top_p = top_p
